@@ -1,0 +1,61 @@
+$bg-gary: #f7f7f7;
+$border-radius: 7px;
+
+.route {
+  background-color: $bg-gary;
+  margin-bottom: 17px;
+  margin-right: 10px;
+  padding: 15px;
+  display: flex;
+  border-radius: $border-radius;
+  cursor: pointer;
+
+  &__logo {
+    width: 45px;
+    height: 40px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    margin-right: 15px;
+
+    & img {
+      width: 20px;
+    }
+  }
+
+  &__content {
+    width: 100%;
+
+    &--name {
+      font-size: 17px;
+      font-weight: 500;
+      color: #4fa095;
+    }
+
+    &--description {
+      padding: 5px 0;
+      font-size: 15px;
+    }
+
+    &--extension {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+
+      & .infomation {
+        display: flex;
+
+        &--icon {
+          width: 15px;
+          margin-right: 10px;
+        }
+
+        &--text {
+          font-size: 15x;
+        }
+      }
+    }
+  }
+}
