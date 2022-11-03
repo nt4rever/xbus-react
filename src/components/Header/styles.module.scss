@@ -1,0 +1,21 @@
+$bg-green: #749f82;
+$header-height: 55px;
+
+header {
+  display: flex;
+  padding: 0 20px;
+  width: 100%;
+  height: $header-height;
+  background-color: $bg-green;
+}
+
+.header__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 55px;
+
+  & h2 {
+    color: #fff;
+  }
+}
