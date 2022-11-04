@@ -8,8 +8,6 @@ import Main from "./views/Main";
 
 const queryClient = new QueryClient();
 
-// console.log(import.meta.env.VITE_FIREBASE_API_KEY);
-
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
