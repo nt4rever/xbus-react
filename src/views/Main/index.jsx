@@ -1,12 +1,15 @@
-import SideBar from "../../components/SideBar";
-import Map from "../Map";
+import { lazy, Suspense } from "react";
 import styles from "./styles.module.scss";
+const Map = lazy(() => import("../Map"));
+const SideBar = lazy(() => import("../../components/SideBar"));
 
 const Main = () => {
   return (
     <div className={styles["container"]}>
-      <SideBar />
-      <Map />
+      <Suspense fallback={<div>Loading...</div>}>
+        <SideBar />
+        <Map />
+      </Suspense>
     </div>
   );
 };

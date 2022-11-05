@@ -9,9 +9,11 @@ $border-radius: 7px;
   display: flex;
   border-radius: $border-radius;
   cursor: pointer;
+  border: 1px solid #fff;
+  transition: 0.1s;
 
   &:hover {
-    box-shadow: 0 0 1px rgb(0 0 0 / 13%), 0 1px 3px rgb(0 0 0 / 20%);
+    border: 1px solid #4fa095;
   }
 
   &__logo {
