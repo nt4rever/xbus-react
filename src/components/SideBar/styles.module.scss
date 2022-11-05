@@ -6,11 +6,13 @@ $bg-green: #425f57;
   position: relative;
 
   &__main {
+    overflow: hidden;
     width: 420px;
     transition: 0.2s ease-in-out;
 
     &.is-collapse {
       width: 0px;
+      transform: translateX(-100%);
       visibility: hidden;
     }
   }
