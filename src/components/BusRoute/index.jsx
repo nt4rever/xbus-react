@@ -23,8 +23,8 @@ const BusRoute = () => {
             )
           )
           .sort((a, b) => (a.routeCode < b.routeCode ? -1 : 1))
-          .map((item, index) => (
-            <ItemBusRoute key={index} busRoute={item} />
+          .map((item) => (
+            <ItemBusRoute key={item.key} busRoute={item} />
           ))}
       </>
     ),

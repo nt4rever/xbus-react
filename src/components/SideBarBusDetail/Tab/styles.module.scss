@@ -1,0 +1,34 @@
+$bg-gary: #f7f7f7;
+$color-green: #4fa095;
+
+.container {
+  padding: 10px;
+
+  & .tab {
+    display: flex;
+    height: 44px;
+    padding: 0 5px;
+    align-items: center;
+    background-color: $bg-gary;
+    border-radius: 7px;
+
+    & .tab-item {
+      flex-grow: 1;
+      padding: 5px;
+      margin: 0 5px;
+      text-align: center;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: 0.1s;
+
+      &:hover {
+        background-color: #fff;
+      }
+
+      &.active {
+        color: $color-green;
+        background-color: #fff;
+      }
+    }
+  }
+}

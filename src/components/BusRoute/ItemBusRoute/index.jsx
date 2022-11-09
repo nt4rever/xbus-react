@@ -2,10 +2,17 @@ import styles from "./styles.module.scss";
 import logo from "../../../assets/svgs/bus-solid.svg";
 import clock from "../../../assets/svgs/clock.svg";
 import dollar from "../../../assets/svgs/dollar.svg";
+import { useNavigate } from "react-router-dom";
 
 const ItemBusRoute = ({ busRoute }) => {
+  const navigate = useNavigate();
+
+  const handleClick = (key) => {
+    navigate("/route/" + key);
+  };
+
   return (
-    <div className={styles["route"]}>
+    <div className={styles["route"]} onClick={() => handleClick(busRoute.key)}>
       <div className={styles["route__logo"]}>
         <img src={logo} alt="logo" />
       </div>
