@@ -2,12 +2,13 @@ $bg-gary: #f7f7f7;
 $color-green: #4fa095;
 
 .container {
-  padding: 10px;
+  margin: 10px 0px 10px 10px;
 
   & .tab {
     display: flex;
     height: 44px;
     padding: 0 5px;
+    margin-right: 20px;
     align-items: center;
     background-color: $bg-gary;
     border-radius: 7px;
@@ -26,9 +27,32 @@ $color-green: #4fa095;
       }
 
       &.active {
-        color: $color-green;
-        background-color: #fff;
+        color: #fff;
+        background-color: $color-green;
       }
+    }
+  }
+
+  & .main {
+    margin-top: 10px;
+    padding-right: 15px;
+    margin-right: 5px;
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #cecdcd;
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-track:hover {
+      background-color: $bg-gary;
+      border-radius: 10px;
     }
   }
 }

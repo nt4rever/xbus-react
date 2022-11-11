@@ -1,6 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { getBusRouteDetail } from "../../apis/bus-detail";
 import styles from "./styles.module.scss";
+import "antd/dist/antd.less";
 import Tab from "./Tab";
 
 const SideBarBusDetail = () => {
@@ -9,6 +12,11 @@ const SideBarBusDetail = () => {
   const routeKey = params.key;
 
   const [isCollapse, setIsCollapse] = useState(false);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["bus-detail", routeKey],
+    queryFn: () => getBusRouteDetail(routeKey),
+  });
 
   const sidebarControlHandleClick = () => {
     setIsCollapse((x) => !x);
@@ -38,10 +46,10 @@ const SideBarBusDetail = () => {
               />
             </svg>
           </div>
-          <div className={styles["name"]}>Tuyen so 01</div>
+          <div className={styles["name"]}>{data?.routeCode}</div>
         </div>
         <div className={styles["bus-container"]}>
-          <Tab routeKey={routeKey} />
+          {isLoading ? "Loading..." : <Tab routeKey={routeKey} data={data} />}
         </div>
       </div>
       <div

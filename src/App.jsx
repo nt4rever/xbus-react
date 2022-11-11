@@ -6,6 +6,7 @@ import store from "./store/rootReducer";
 import MainLayout from "./layouts/MainLayout";
 import Main from "./views/Main";
 import "./App.scss";
+import "antd/dist/antd.less";
 import "leaflet/dist/leaflet.css";
 import BusDetail from "./views/BusDetail";
 

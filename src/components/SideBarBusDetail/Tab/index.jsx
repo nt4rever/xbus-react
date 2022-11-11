@@ -1,18 +1,40 @@
 import { useMemo } from "react";
 import { useState } from "react";
 import styles from "./styles.module.scss";
-import { tabItems } from "./tabItems";
+import TabInformation from "./TabInformation";
+import TabRating from "./TabRating";
+import TabStation from "./TabStation";
 
-const Tab = ({ routeKey }) => {
+const tabItems = [
+  {
+    key: 0,
+    title: "Thông tin",
+  },
+  {
+    key: 1,
+    title: "Trạm dừng",
+  },
+  {
+    key: 2,
+    title: "Đánh giá",
+  },
+];
+
+const Tab = ({ data, routeKey }) => {
   const [tabAcitve, setTabAcitve] = useState(0);
 
-  const tabView = useMemo(
-    () =>
-      tabItems.map((item) => {
-        if (item.key === tabAcitve) return item.content;
-      }),
-    [tabAcitve]
-  );
+  const tabView = useMemo(() => {
+    switch (tabAcitve) {
+      case 0:
+        return <TabInformation data={data} />;
+      case 1:
+        return <TabStation data={data} />;
+      case 2:
+        return <TabRating routeKey={routeKey} />;
+      default:
+        return <TabInformation data={data} />;
+    }
+  }, [tabAcitve]);
 
   const handleTabClick = (key) => {
     setTabAcitve(key);
@@ -35,9 +57,7 @@ const Tab = ({ routeKey }) => {
           </div>
         ))}
       </div>
-      <div className={styles["main"]}>
-        {tabView} {routeKey}
-      </div>
+      <div className={styles["main"]}>{tabView}</div>
     </div>
   );
 };

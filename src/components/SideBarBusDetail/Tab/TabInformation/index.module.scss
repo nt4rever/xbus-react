@@ -1,0 +1,39 @@
+$color-green: #4fa095;
+
+.information {
+  & > ul {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.row {
+  list-style: none;
+  margin: 5px 0px;
+  text-align: justify;
+  margin-left: 15px;
+
+  & .title,
+  .content {
+    display: inline;
+    font-size: 15px;
+  }
+
+  & .title {
+    font-weight: 500;
+    padding-right: 5px;
+    position: relative;
+
+    &::before {
+      position: absolute;
+      content: "";
+      background-color: $color-green;
+      width: 7px;
+      height: 7px;
+      border-radius: 50px;
+      top: 50%;
+      left: -15px;
+      transform: translateY(-50%);
+    }
+  }
+}
