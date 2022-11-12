@@ -1,0 +1,64 @@
+.station {
+  margin-top: 10px;
+  position: relative;
+
+  &__item {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+    align-items: center;
+    cursor: pointer;
+
+    &:first-child {
+      & .outer-dot .dot {
+        background-color: #00897b;
+      }
+    }
+
+    &:nth-last-child(-n + 2) {
+      margin-bottom: 0px;
+      & .outer-dot .dot {
+        background-color: #00897b;
+      }
+    }
+
+    & .outer-dot {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8px;
+
+      & .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50px;
+        background-color: #c4c4c4;
+      }
+
+      &.selected {
+        border-radius: 50px;
+        background-color: #00897b31;
+
+        & .dot {
+          background-color: #00897b;
+          z-index: 2;
+        }
+      }
+    }
+  }
+
+  & .dot-line {
+    position: absolute;
+    height: calc(100% - 30px);
+    width: 1px;
+    background-color: #bdbec2;
+    top: 0;
+    left: 10.5px;
+    margin: 15px 0;
+  }
+}
+
+.option-station {
+  display: flex;
+  justify-content: center;
+}

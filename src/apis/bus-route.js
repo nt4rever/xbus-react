@@ -6,7 +6,12 @@ export const getListBusRoute = async () => {
   const res = await new Promise((resolve) => {
     onValue(query, (snapshot) => {
       if (snapshot.exists()) {
-        const data = Object.values(snapshot.val());
+        const data = [];
+        snapshot.forEach((childSnapshot) => {
+          const key = childSnapshot.key;
+          const childData = childSnapshot.val();
+          data.push({ ...childData, key });
+        });
         resolve(data);
       } else {
         resolve([]);

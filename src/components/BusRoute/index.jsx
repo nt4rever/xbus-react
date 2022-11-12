@@ -3,33 +3,34 @@ import { useMemo, useState } from "react";
 import { getListBusRoute } from "../../apis";
 import { removeAccents } from "../../utils/string";
 import ItemBusRoute from "./ItemBusRoute";
+import useDebounce from "../../hooks/useDebounce";
 import styles from "./styles.module.scss";
 
 const BusRoute = () => {
-  const [seacrchValue, setSeacrchValue] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+  const debouncedValue = useDebounce(searchValue, 300);
 
   const { data, isLoading } = useQuery({
     queryKey: ["getRoutes"],
     queryFn: getListBusRoute,
   });
 
-  const listBusRoute = useMemo(
-    () => (
+  const listBusRoute = useMemo(() => {
+    return (
       <>
         {data
           ?.filter((obj) =>
             Object.values(obj).some((val) =>
-              removeAccents(val).includes(removeAccents(seacrchValue))
+              removeAccents(val).includes(removeAccents(searchValue))
             )
           )
           .sort((a, b) => (a.routeCode < b.routeCode ? -1 : 1))
-          .map((item, index) => (
-            <ItemBusRoute key={index} busRoute={item} />
+          .map((item) => (
+            <ItemBusRoute key={item.key} busRoute={item} />
           ))}
       </>
-    ),
-    [data, seacrchValue]
-  );
+    );
+  }, [data, debouncedValue]);
 
   const isLoadingEffect = isLoading ? (
     <div className={styles["loader-container"]}>
@@ -42,8 +43,8 @@ const BusRoute = () => {
       <div className={styles["bus-route__search"]}>
         <input
           type="text"
-          value={seacrchValue}
-          onChange={(e) => setSeacrchValue(e.target.value)}
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
           placeholder="Tìm tuyến xe"
         />
       </div>

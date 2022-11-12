@@ -1,0 +1,55 @@
+.summary {
+  display: flex;
+  align-items: center;
+
+  &__statistical {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    & > h1 {
+      font-weight: 700;
+      color: #434a67;
+      padding: 0;
+      margin: 0;
+    }
+
+    & .star {
+      color: yellow;
+      font-size: 30px;
+
+      &.disable {
+        color: #d2d2d2;
+      }
+    }
+
+    &--count {
+      display: flex;
+      gap: 7px;
+      color: #434a67;
+
+      & > svg {
+        width: 14px;
+      }
+
+      & > span {
+        font-size: 16px;
+      }
+    }
+  }
+
+  &__chart {
+    flex: 4;
+
+    &--row {
+      display: flex;
+
+      & .chart-rank {
+        width: 20px;
+        color: #434a67;
+      }
+    }
+  }
+}
