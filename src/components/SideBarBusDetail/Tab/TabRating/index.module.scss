@@ -1,0 +1,12 @@
+.rating {
+  &__container {
+    & h2 {
+      font-weight: 400;
+      text-transform: uppercase;
+    }
+  }
+
+  &__summary {
+    margin-bottom: 20px;
+  }
+}
