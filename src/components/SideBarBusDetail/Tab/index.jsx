@@ -28,7 +28,7 @@ const Tab = ({ data, routeKey }) => {
       case 0:
         return <TabInformation data={data} />;
       case 1:
-        return <TabStation data={data} />;
+        return <TabStation routeKey={routeKey} />;
       case 2:
         return <TabRating routeKey={routeKey} />;
       default:

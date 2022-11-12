@@ -16,6 +16,7 @@ export default defineConfig({
       less: {
         modifyVars: {
           "primary-color": "#749F82",
+          "font-family": "Inter, Avenir, Helvetica, Arial, sans-serif",
         },
         javascriptEnabled: true,
       },
