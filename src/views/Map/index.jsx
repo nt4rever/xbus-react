@@ -11,7 +11,7 @@ import {
 import { useSelector } from "react-redux";
 import { getRouteDirection } from "../../apis/direction/route";
 import styles from "./styles.module.scss";
-
+import L from "leaflet";
 const RecenterAutomatically = ({ currentStation }) => {
   const map = useMap();
   useEffect(() => {
@@ -20,14 +20,24 @@ const RecenterAutomatically = ({ currentStation }) => {
   return null;
 };
 
+const iconMarker = L.icon({
+  iconUrl: "/location-1.svg",
+  iconSize: [38, 95], // size of the icon
+  // shadowSize: [50, 64], // size of the shadow
+  // iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+  // shadowAnchor: [4, 62], // the same for the shadow
+  popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
+});
+
 const Map = () => {
-  const { stations, direction, currentStation } = useSelector(
+  const { stations, direction, currentStation, isRoute } = useSelector(
     (state) => state.map
   );
 
   const { data, isLoading } = useQuery({
     queryKey: ["get-route-direction", stations, direction],
     queryFn: () => getRouteDirection(stations, direction),
+    enabled: isRoute,
   });
 
   return (
@@ -45,13 +55,12 @@ const Map = () => {
         {stations
           .filter((item) => item.direction === direction)
           .map((item, index) => (
-            <Marker position={[item.lat, item.lng]} key={index}>
-              <Tooltip
-                direction="top"
-                offset={[-15, -15]}
-                opacity={1}
-                permanent
-              >
+            <Marker
+              icon={iconMarker}
+              position={[item.lat, item.lng]}
+              key={index}
+            >
+              <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent>
                 {item.name}
               </Tooltip>
             </Marker>
@@ -59,7 +68,16 @@ const Map = () => {
         {currentStation && (
           <RecenterAutomatically currentStation={currentStation} />
         )}
-        {!isLoading && data && <GeoJSON data={data} />}
+        {!isLoading && data && (
+          <GeoJSON
+            data={data}
+            style={{
+              color: "#4fa095",
+              weight: 7,
+              opacity: 1,
+            }}
+          />
+        )}
       </MapContainer>
     </div>
   );

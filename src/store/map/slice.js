@@ -6,16 +6,17 @@ export const mapSlice = createSlice({
     direction: "forward",
     currentStation: undefined,
     stations: [15.987076944483714, 108.24177253534327],
+    isRoute: false,
   },
   reducers: {
     setStations: (state, action) => {
-      state.stations = action.payload?.stations;
-      state.currentStation = action.payload?.currentStation
-        ? action.payload?.currentStation
+      const { stations, currentStation, direction, isRoute } = action.payload;
+      state.stations = stations ? stations : state.stations;
+      state.currentStation = currentStation
+        ? currentStation
         : state.currentStation;
-      state.direction = action.payload?.direction
-        ? action.payload?.direction
-        : state.direction;
+      state.direction = direction ? direction : state.direction;
+      state.isRoute = isRoute !== undefined ? isRoute : state.isRoute;
       return state;
     },
     setDirection: (state, action) => {
@@ -24,6 +25,10 @@ export const mapSlice = createSlice({
     },
     setCurrentStation: (state, action) => {
       state.currentStation = action.payload?.currentStation;
+      return state;
+    },
+    setRoute: (state, action) => {
+      state.isRoute = action.payload?.isRoute;
       return state;
     },
   },
