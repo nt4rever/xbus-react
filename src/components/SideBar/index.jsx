@@ -4,9 +4,23 @@ import styles from "./styles.module.scss";
 import { Tabs } from "antd";
 import { sideBarItems } from "./sideBarItems";
 import "./tab.scss";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { mapActions } from "../../store/map/slice";
 
 const SideBar = () => {
+  const dispatch = useDispatch();
   const [isCollapse, setIsCollapse] = useState(false);
+
+  useEffect(() => {
+    dispatch(
+      mapActions.setStations({
+        stations: [],
+        direction: "forward",
+        isRoute: false,
+      })
+    );
+  }, []);
 
   const sidebarControlHandleClick = () => {
     setIsCollapse((x) => !x);
