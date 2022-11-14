@@ -4,8 +4,11 @@ import styled from "styled-components";
 import { useState } from "react";
 import { getListStation } from "../../../../apis/station";
 import styles from "./index.module.scss";
+import { useDispatch } from "react-redux";
+import { mapActions } from "../../../../store/map/slice";
 
 const TabStation = ({ routeKey }) => {
+  const dispatch = useDispatch();
   const [selected, setSelected] = useState(0);
   const [optionValue, setOptionValue] = useState("forward");
 
@@ -28,10 +31,13 @@ const TabStation = ({ routeKey }) => {
   const optionOnChange = ({ target: { value } }) => {
     setSelected(0);
     setOptionValue(value);
+    dispatch(mapActions.setDirection({ direction: value }));
   };
 
-  const handleStationClick = (index) => {
+  const handleStationClick = (index, item) => {
     setSelected(index);
+    const currentStation = [item.lat, item.lng];
+    dispatch(mapActions.setCurrentStation({ currentStation }));
   };
 
   const StyledRadio = styled(Radio.Group)`
@@ -73,7 +79,7 @@ const TabStation = ({ routeKey }) => {
                 <div
                   className={styles["station__item"]}
                   key={index}
-                  onClick={() => handleStationClick(index)}
+                  onClick={() => handleStationClick(index, item)}
                 >
                   <div
                     className={`${styles["outer-dot"]} ${
