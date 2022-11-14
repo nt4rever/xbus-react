@@ -5,10 +5,16 @@ import { getBusRouteDetail } from "../../apis/bus-detail";
 import styles from "./styles.module.scss";
 import "antd/dist/antd.less";
 import Tab from "./Tab";
+import { getListStation } from "../../apis/station";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { mapActions } from "../../store/map/slice";
 
 const SideBarBusDetail = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const params = useParams();
+
   const routeKey = params.key;
 
   const [isCollapse, setIsCollapse] = useState(false);
@@ -17,6 +23,22 @@ const SideBarBusDetail = () => {
     queryKey: ["bus-detail", routeKey],
     queryFn: () => getBusRouteDetail(routeKey),
   });
+
+  const { data: stations } = useQuery({
+    queryKey: ["get-list-station", routeKey],
+    queryFn: () => getListStation(routeKey),
+  });
+
+  useEffect(() => {
+    if (stations?.length > 0)
+      dispatch(
+        mapActions.setStations({
+          stations,
+          currentStation: [stations[0].lat, stations[0].lng],
+          isRoute: true,
+        })
+      );
+  }, [stations]);
 
   const sidebarControlHandleClick = () => {
     setIsCollapse((x) => !x);
