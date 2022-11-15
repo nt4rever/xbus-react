@@ -36,6 +36,7 @@
     margin-right: 5px;
     max-height: calc(100vh - 180px);
     overflow-y: auto;
+    width: 100%;
 
     &::-webkit-scrollbar {
       width: 6px;
