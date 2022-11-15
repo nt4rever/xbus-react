@@ -20,11 +20,21 @@ const RecenterAutomatically = ({ currentStation }) => {
   return null;
 };
 
-const iconMarker = L.icon({
-  iconUrl: "/location-1.svg",
+const iconMarkerForward = L.icon({
+  iconUrl: "/location-forward.svg",
+  iconSize: [38, 95], // size of the icon
+
+  // shadowSize: [50, 64], // size of the shadow
+  iconAnchor: [10, 60], // point of the icon which will correspond to marker's location
+  // shadowAnchor: [4, 62], // the same for the shadow
+  popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
+});
+
+const iconMarkerBack = L.icon({
+  iconUrl: "/location-back.svg",
   iconSize: [38, 95], // size of the icon
   // shadowSize: [50, 64], // size of the shadow
-  // iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+  iconAnchor: [10, 60], // point of the icon which will correspond to marker's location
   // shadowAnchor: [4, 62], // the same for the shadow
   popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
 });
@@ -39,6 +49,9 @@ const Map = () => {
     queryFn: () => getRouteDirection(stations, direction),
     enabled: isRoute,
   });
+
+  const iconMarker =
+    direction === "forward" ? iconMarkerForward : iconMarkerBack;
 
   return (
     <div className={styles["map__container"]}>
@@ -60,7 +73,7 @@ const Map = () => {
               position={[item.lat, item.lng]}
               key={index}
             >
-              <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent>
+              <Tooltip direction="top" offset={[10, -30]} opacity={1} permanent>
                 {item.name}
               </Tooltip>
             </Marker>

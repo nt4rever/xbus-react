@@ -1,5 +1,3 @@
-$color-green: #4fa095;
-
 .information {
   & > ul {
     margin: 0;
@@ -27,7 +25,7 @@ $color-green: #4fa095;
     &::before {
       position: absolute;
       content: "";
-      background-color: $color-green;
+      background-color: $cl-green;
       width: 7px;
       height: 7px;
       border-radius: 50px;

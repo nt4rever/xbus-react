@@ -1,19 +1,16 @@
-$bg-gary: #f7f7f7;
-$border-radius: 7px;
-
 .route {
-  background-color: $bg-gary;
+  background-color: $bg-gray;
   margin-bottom: 17px;
   margin-right: 10px;
   padding: 15px;
   display: flex;
-  border-radius: $border-radius;
+  border-radius: $border-radius-light;
   cursor: pointer;
   border: 1px solid #fff;
   transition: 0.1s;
 
   &:hover {
-    border: 1px solid #4fa095;
+    border: 1px solid $cl-green;
   }
 
   &__logo {
@@ -37,7 +34,7 @@ $border-radius: 7px;
     &--name {
       font-size: 17px;
       font-weight: 500;
-      color: #4fa095;
+      color: $cl-green;
     }
 
     &--description {

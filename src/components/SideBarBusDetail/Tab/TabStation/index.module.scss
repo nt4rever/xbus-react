@@ -11,14 +11,14 @@
 
     &:first-child {
       & .outer-dot .dot {
-        background-color: #00897b;
+        background-color: $cl-green;
       }
     }
 
     &:nth-last-child(-n + 2) {
       margin-bottom: 0px;
       & .outer-dot .dot {
-        background-color: #00897b;
+        background-color: $cl-green;
       }
     }
 
@@ -32,7 +32,7 @@
         width: 7px;
         height: 7px;
         border-radius: 50px;
-        background-color: #c4c4c4;
+        background-color: $bg-gray-disable;
       }
 
       &.selected {
@@ -40,7 +40,7 @@
         background-color: #00897b31;
 
         & .dot {
-          background-color: #00897b;
+          background-color: $cl-green;
           z-index: 2;
         }
       }
@@ -51,7 +51,7 @@
     position: absolute;
     height: calc(100% - 30px);
     width: 1px;
-    background-color: #bdbec2;
+    background-color: $bg-gray-disable;
     top: 0;
     left: 10.5px;
     margin: 15px 0;

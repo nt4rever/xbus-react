@@ -49,9 +49,9 @@ const TabStation = ({ routeKey }) => {
         border-radius: 0 10px 10px 0;
       }
       &.ant-radio-button-wrapper-checked {
-        background-color: #4fa095;
+        background-color: $cl-green;
         &:hover {
-          background-color: #4fa095;
+          background-color: $cl-green;
         }
       }
     }

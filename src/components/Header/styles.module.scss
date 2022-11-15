@@ -1,4 +1,3 @@
-$bg-green: #749f82;
 $header-height: 55px;
 
 header {
@@ -16,6 +15,6 @@ header {
   width: 55px;
 
   & h2 {
-    color: #fff;
+    color: $cl-white;
   }
 }
