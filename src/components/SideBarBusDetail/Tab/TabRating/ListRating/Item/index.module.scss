@@ -39,7 +39,7 @@
 
     &--rating {
       & .star {
-        color: yellow;
+        color: $cl-yellow-star;
         font-size: 20px;
 
         &.disable {
