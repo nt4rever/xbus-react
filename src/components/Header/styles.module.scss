@@ -6,6 +6,7 @@ header {
   width: 100%;
   height: $header-height;
   background-color: $bg-green;
+  justify-content: space-between;
 }
 
 .header__logo {
@@ -16,5 +17,53 @@ header {
 
   & h2 {
     color: $cl-white;
+  }
+}
+
+.header__auth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & button {
+    padding: 5px 15px;
+    background-color: transparent;
+    color: $cl-white;
+    border: 1px solid $cl-white;
+    border-radius: $border-radius-light;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+      background-color: $bg-white;
+      color: $cl-green-dark;
+    }
+  }
+
+  &__user {
+    position: relative;
+    padding: 5px 25px;
+    border-radius: 10px;
+    border: 1px solid $cl-white;
+    color: $cl-white;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover .logout {
+      visibility: visible;
+    }
+
+    & .logout {
+      position: absolute;
+      top: 34px;
+      left: 0px;
+      padding: 5px 30px;
+      background: #fff;
+      color: $cl-green-dark;
+      z-index: 1000;
+      border-radius: 10px;
+      visibility: hidden;
+      transition: 0.2;
+    }
   }
 }

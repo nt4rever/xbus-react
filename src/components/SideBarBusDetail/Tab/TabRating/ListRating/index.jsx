@@ -3,9 +3,11 @@ import Item from "./Item";
 const ListRating = ({ ratings }) => {
   return (
     <div>
-      {ratings.map((item, index) => (
-        <Item key={index} data={item} />
-      ))}
+      {ratings
+        .sort((a, b) => Number(b.time) - Number(a.time))
+        .map((item, index) => (
+          <Item key={index} data={item} />
+        ))}
     </div>
   );
 };

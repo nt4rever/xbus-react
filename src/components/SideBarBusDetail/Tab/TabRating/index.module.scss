@@ -9,4 +9,20 @@
   &__summary {
     margin-bottom: 20px;
   }
+
+  &__button {
+    margin: 10px auto;
+    text-align: center;
+
+    & button {
+      padding: 7px 30px;
+      background-color: $bg-gray;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+    }
+  }
 }

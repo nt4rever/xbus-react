@@ -1,4 +1,5 @@
-import { onValue, ref } from "firebase/database";
+import { onValue, ref, set } from "firebase/database";
+import { makeKey } from "../utils/string";
 import { db } from "./firebase";
 
 export const getListRating = async (key) => {
@@ -14,4 +15,14 @@ export const getListRating = async (key) => {
     });
   });
   return res;
+};
+
+export const createRating = async (routeKey, rating) => {
+  await set(ref(db, `Ratings/${routeKey}/${makeKey(12)}`), {
+    name: rating.name,
+    rating: rating.rating,
+    text: rating.text,
+    time: rating.time,
+  });
+  return true;
 };

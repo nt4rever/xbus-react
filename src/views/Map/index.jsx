@@ -11,7 +11,8 @@ import {
 import { useSelector } from "react-redux";
 import { getRouteDirection } from "../../apis/direction/route";
 import styles from "./styles.module.scss";
-import L from "leaflet";
+import { iconMarkerBack, iconMarkerForward } from "./Icon";
+
 const RecenterAutomatically = ({ currentStation }) => {
   const map = useMap();
   useEffect(() => {
@@ -19,25 +20,6 @@ const RecenterAutomatically = ({ currentStation }) => {
   }, [currentStation]);
   return null;
 };
-
-const iconMarkerForward = L.icon({
-  iconUrl: "/location-forward.svg",
-  iconSize: [38, 95], // size of the icon
-
-  // shadowSize: [50, 64], // size of the shadow
-  iconAnchor: [10, 60], // point of the icon which will correspond to marker's location
-  // shadowAnchor: [4, 62], // the same for the shadow
-  popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
-});
-
-const iconMarkerBack = L.icon({
-  iconUrl: "/location-back.svg",
-  iconSize: [38, 95], // size of the icon
-  // shadowSize: [50, 64], // size of the shadow
-  iconAnchor: [10, 60], // point of the icon which will correspond to marker's location
-  // shadowAnchor: [4, 62], // the same for the shadow
-  popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
-});
 
 const Map = () => {
   const { stations, direction, currentStation, isRoute } = useSelector(
@@ -53,6 +35,34 @@ const Map = () => {
   const iconMarker =
     direction === "forward" ? iconMarkerForward : iconMarkerBack;
 
+  const renderToCurrentPosition = currentStation && (
+    <RecenterAutomatically currentStation={currentStation} />
+  );
+
+  const listStationMarker = stations
+    .filter((item) => item.direction === direction)
+    .map((item, index) => (
+      <Marker icon={iconMarker} position={[item.lat, item.lng]} key={index}>
+        <Tooltip direction="top" offset={[10, -30]} opacity={1} permanent>
+          {item.name}
+        </Tooltip>
+      </Marker>
+    ));
+
+  const colorGeo = direction === "forward" ? "#4fa095" : "#59C1BD";
+
+  const geoJson =
+    !isLoading && data ? (
+      <GeoJSON
+        data={data}
+        style={{
+          color: `${colorGeo}`,
+          weight: 7,
+          opacity: 1,
+        }}
+      />
+    ) : undefined;
+
   return (
     <div className={styles["map__container"]}>
       <MapContainer
@@ -65,32 +75,9 @@ const Map = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {stations
-          .filter((item) => item.direction === direction)
-          .map((item, index) => (
-            <Marker
-              icon={iconMarker}
-              position={[item.lat, item.lng]}
-              key={index}
-            >
-              <Tooltip direction="top" offset={[10, -30]} opacity={1} permanent>
-                {item.name}
-              </Tooltip>
-            </Marker>
-          ))}
-        {currentStation && (
-          <RecenterAutomatically currentStation={currentStation} />
-        )}
-        {!isLoading && data && (
-          <GeoJSON
-            data={data}
-            style={{
-              color: "#4fa095",
-              weight: 7,
-              opacity: 1,
-            }}
-          />
-        )}
+        {listStationMarker}
+        {renderToCurrentPosition}
+        {geoJson}
       </MapContainer>
     </div>
   );
