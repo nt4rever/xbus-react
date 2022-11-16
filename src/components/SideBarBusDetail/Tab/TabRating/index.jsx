@@ -8,11 +8,12 @@ import NewRating from "./Modal";
 import SummaryRating from "./SummaryRating";
 
 const TabRating = ({ routeKey }) => {
-  const { isLogged, user } = useSelector((state) => state.auth);
+  const { isLogged } = useSelector((state) => state.auth);
+  const { modalRating } = useSelector((state) => state.modal);
   const dispatch = useDispatch();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["get-list-rating", routeKey],
+    queryKey: ["get-list-rating", routeKey, modalRating],
     queryFn: () => getListRating(routeKey),
   });
 
@@ -35,7 +36,7 @@ const TabRating = ({ routeKey }) => {
     <div className={styles["rating__container"]}>
       <div className={styles["rating__button"]}>
         <button onClick={buttonRatingClick}>Viết đánh giá</button>
-        <NewRating />
+        <NewRating routeKey={routeKey} />
       </div>
       <h2>Tổng hợp đánh giá</h2>
       <div className={styles["rating__summary"]}>

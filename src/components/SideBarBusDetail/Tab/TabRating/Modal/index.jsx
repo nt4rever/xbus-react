@@ -4,10 +4,12 @@ import { modalActions } from "../../../../../store/modal/slice";
 import { Input } from "antd";
 import styles from "./index.module.scss";
 import { useState } from "react";
+import { createRating } from "../../../../../apis/rating";
 const { TextArea } = Input;
 
-const NewRating = () => {
+const NewRating = ({ routeKey }) => {
   const { modalRating } = useSelector((state) => state.modal);
+  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const [value, setValue] = useState({
@@ -15,14 +17,21 @@ const NewRating = () => {
     text: "",
   });
 
-  const handleOk = () => {
+  const handleOk = async () => {
     if (value.text === "")
       return message.error("Vui lòng viết đánh giá của bạn!");
-    dispatch(
-      modalActions.setModalRating({
-        modalRating: false,
-      })
-    );
+    else {
+      await createRating(routeKey, {
+        ...value,
+        name: `${user.firstName} ${user.lastName}`,
+        time: Date.now(),
+      });
+      dispatch(
+        modalActions.setModalRating({
+          modalRating: false,
+        })
+      );
+    }
   };
   const handleCancel = () => {
     dispatch(
@@ -32,10 +41,10 @@ const NewRating = () => {
     );
   };
 
-  const rateOnChange = (value) => {
+  const rateOnChange = (v) => {
     setValue({
       ...value,
-      rating: value,
+      rating: v,
     });
   };
   const textOnChange = (e) => {

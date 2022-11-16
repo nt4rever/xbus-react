@@ -29,7 +29,7 @@ const Map = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["get-route-direction", stations, direction],
     queryFn: () => getRouteDirection(stations, direction),
-    enabled: false,
+    enabled: isRoute,
   });
 
   const iconMarker =

@@ -1,6 +1,7 @@
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { Form, Input, Modal } from "antd";
+import { Form, Input, message, Modal } from "antd";
 import { useDispatch, useSelector } from "react-redux";
+import { getUser } from "../../../apis/user";
 import { authActions } from "../../../store/auth/slice";
 import { modalActions } from "../../../store/modal/slice";
 
@@ -9,21 +10,29 @@ const LoginModal = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
-  const handleOk = () => {
-    // const value = form.getFieldsValue(["username", "password"]);
-    dispatch(
-      authActions.login({
-        isLogged: true,
-        user: {
-          name: "tan",
-        },
-      })
-    );
-    dispatch(
-      modalActions.setModalLogin({
-        modalLogin: false,
-      })
-    );
+  const handleOk = async () => {
+    const { username, password } = form.getFieldsValue([
+      "username",
+      "password",
+    ]);
+
+    const user = await getUser(username);
+    if (user) {
+      if (user.password === password) {
+        form.resetFields();
+        dispatch(
+          authActions.login({
+            isLogged: true,
+            user,
+          })
+        );
+        dispatch(
+          modalActions.setModalLogin({
+            modalLogin: false,
+          })
+        );
+      } else message.error("Tên người dùng hoặc mật khẩu không đúng!");
+    } else message.error("Tên người dùng không tồn tại!");
   };
 
   const handleCancel = () => {

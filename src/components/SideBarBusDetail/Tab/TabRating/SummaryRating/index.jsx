@@ -33,18 +33,25 @@ const SummaryRating = ({ ratings }) => {
             ratings.length
         ) / 100
       : 0;
-
+  const ratingStar = (
+    <>
+      {Array.from({ length: Math.round(ratingAverage) }).map((_, index) => (
+        <span key={index} className={styles["star"]}>
+          ★
+        </span>
+      ))}
+      {Array.from({ length: 5 - Math.round(ratingAverage) }).map((_, index) => (
+        <span key={index} className={`${styles["star"]} ${styles["disable"]}`}>
+          ★
+        </span>
+      ))}
+    </>
+  );
   return (
     <div className={styles["summary"]}>
       <div className={styles["summary__statistical"]}>
         <h1>{ratingAverage}</h1>
-        <div className={styles["summary__statistical--star"]}>
-          <span className={styles["star"]}>★</span>
-          <span className={styles["star"]}>★</span>
-          <span className={styles["star"]}>★</span>
-          <span className={styles["star"]}>★</span>
-          <span className={styles["star"]}>★</span>
-        </div>
+        <div className={styles["summary__statistical--star"]}>{ratingStar}</div>
         <div className={styles["summary__statistical--count"]}>
           <svg
             role="img"

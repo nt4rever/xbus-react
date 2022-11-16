@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { authActions } from "../../store/auth/slice";
 import { modalActions } from "../../store/modal/slice";
 import LoginModal from "./Modal";
 import styles from "./styles.module.scss";
@@ -14,6 +15,10 @@ const Header = () => {
       })
     );
   };
+
+  const handleLogoutClick = () => {
+    dispatch(authActions.logout());
+  };
   return (
     <header>
       <div className={styles["header__logo"]}>
@@ -23,7 +28,12 @@ const Header = () => {
       </div>
       <div className={styles["header__auth"]}>
         {isLogged ? (
-          <div className={styles["header__auth__user"]}>{user.name}</div>
+          <div className={styles["header__auth__user"]}>
+            <div className={styles["logout"]} onClick={handleLogoutClick}>
+              Logout
+            </div>
+            <span>{user.username}</span>
+          </div>
         ) : (
           <button onClick={handleLoginClick}>Đăng nhập</button>
         )}
