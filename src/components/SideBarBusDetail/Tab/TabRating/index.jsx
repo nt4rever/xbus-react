@@ -1,20 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
+import { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getListRating } from "../../../../apis/rating";
+import { BusDetailContext } from "../../../../contexts/busDetailContext";
 import { modalActions } from "../../../../store/modal/slice";
 import styles from "./index.module.scss";
 import ListRating from "./ListRating";
 import NewRating from "./Modal";
 import SummaryRating from "./SummaryRating";
 
-const TabRating = ({ routeKey }) => {
+const TabRating = () => {
+  const { routeKey } = useContext(BusDetailContext);
   const { isLogged } = useSelector((state) => state.auth);
-  const { modalRating } = useSelector((state) => state.modal);
   const dispatch = useDispatch();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["get-list-rating", routeKey, modalRating],
+    queryKey: ["get-list-rating", routeKey],
     queryFn: () => getListRating(routeKey),
+    refetchInterval: 1000,
   });
 
   const buttonRatingClick = () => {

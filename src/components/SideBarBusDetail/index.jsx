@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getBusRouteDetail } from "../../apis/bus-detail";
 import styles from "./styles.module.scss";
@@ -9,14 +9,15 @@ import { getListStation } from "../../apis/station";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { mapActions } from "../../store/map/slice";
+import { BusDetailContext } from "../../contexts/busDetailContext";
 
 const SideBarBusDetail = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { setRouteKey, setData } = useContext(BusDetailContext);
   const params = useParams();
-
   const routeKey = params.key;
-
+  setRouteKey(routeKey);
   const [isCollapse, setIsCollapse] = useState(false);
 
   const { data, isLoading } = useQuery({
@@ -27,6 +28,9 @@ const SideBarBusDetail = () => {
   const { data: stations } = useQuery({
     queryKey: ["get-list-station", routeKey],
     queryFn: () => getListStation(routeKey),
+    onSuccess: () => {
+      setData(data);
+    },
   });
 
   useEffect(() => {
@@ -71,7 +75,7 @@ const SideBarBusDetail = () => {
           <div className={styles["name"]}>{data?.routeCode}</div>
         </div>
         <div className={styles["bus-container"]}>
-          {isLoading ? "Loading..." : <Tab routeKey={routeKey} data={data} />}
+          {isLoading ? "Loading..." : <Tab />}
         </div>
       </div>
       <div

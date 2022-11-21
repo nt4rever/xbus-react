@@ -1,6 +1,9 @@
+import { useContext } from "react";
+import { BusDetailContext } from "../../../../contexts/busDetailContext";
 import styles from "./index.module.scss";
 
-const TabInformation = ({ data }) => {
+const TabInformation = () => {
+  const { data } = useContext(BusDetailContext);
   return (
     <div className={styles["information"]}>
       {data && (
