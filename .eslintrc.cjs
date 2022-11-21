@@ -18,7 +18,7 @@ module.exports = {
   rules: {
     "no-console": "warn",
     "react/prop-types": "off",
-    "react/self-closing-comp": "warn",
+    "react/self-closing-comp": "off",
   },
   settings: {
     react: {

@@ -1,4 +1,6 @@
 import { lazy, Suspense } from "react";
+import Loader from "../../components/Loader";
+import { BusDetailProvider } from "../../contexts/busDetailContext";
 import styles from "./styles.module.scss";
 const Map = lazy(() => import("../Map"));
 
@@ -9,8 +11,10 @@ const SideBarBusDetail = lazy(() =>
 const BusDetail = () => {
   return (
     <div className={styles["container"]}>
-      <Suspense fallback={<div>Loading...</div>}>
-        <SideBarBusDetail />
+      <Suspense fallback={<Loader />}>
+        <BusDetailProvider>
+          <SideBarBusDetail />
+        </BusDetailProvider>
         <Map />
       </Suspense>
     </div>

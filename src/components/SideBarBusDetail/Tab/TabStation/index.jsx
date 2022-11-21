@@ -1,13 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { Radio } from "antd";
 import styled from "styled-components";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { getListStation } from "../../../../apis/station";
 import styles from "./index.module.scss";
 import { useDispatch } from "react-redux";
 import { mapActions } from "../../../../store/map/slice";
+import { BusDetailContext } from "../../../../contexts/busDetailContext";
 
-const TabStation = ({ routeKey }) => {
+const TabStation = () => {
+  const { routeKey } = useContext(BusDetailContext);
   const dispatch = useDispatch();
   const [selected, setSelected] = useState(0);
   const [optionValue, setOptionValue] = useState("forward");
