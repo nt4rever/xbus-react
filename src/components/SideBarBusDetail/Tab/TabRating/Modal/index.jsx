@@ -25,6 +25,7 @@ const NewRating = ({ routeKey }) => {
         ...value,
         name: `${user.firstName} ${user.lastName}`,
         time: Date.now(),
+        username: user.username,
       });
       dispatch(
         modalActions.setModalRating({

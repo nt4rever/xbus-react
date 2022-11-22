@@ -1,4 +1,7 @@
+import { useContext } from "react";
+import { useRef } from "react";
 import { useState } from "react";
+import { BusDetailContext } from "../../../contexts/busDetailContext";
 import styles from "./styles.module.scss";
 import TabInformation from "./TabInformation";
 import TabRating from "./TabRating";
@@ -25,6 +28,17 @@ const tabItems = [
 const Tab = () => {
   const [tabView, setTabView] = useState(tabItems[0].content);
   const [tabAcitve, setTabAcitve] = useState(0);
+  const { setCurrentList } = useContext(BusDetailContext);
+  const mainRef = useRef(null);
+
+  const handleScroll = () => {
+    const clientHeight = mainRef.current?.clientHeight;
+    const scrollHeight = mainRef.current?.scrollHeight;
+    const scrollTop = mainRef.current?.scrollTop;
+    if (scrollHeight - clientHeight - scrollTop < 10 && tabAcitve === 2) {
+      setCurrentList();
+    }
+  };
 
   const handleTabClick = (tab) => {
     setTabAcitve(tab.key);
@@ -48,7 +62,9 @@ const Tab = () => {
           </div>
         ))}
       </div>
-      <div className={styles["main"]}>{tabView}</div>
+      <div className={styles["main"]} ref={mainRef} onScroll={handleScroll}>
+        {tabView}
+      </div>
     </div>
   );
 };

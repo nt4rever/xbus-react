@@ -13,13 +13,7 @@ const SideBar = () => {
   const [isCollapse, setIsCollapse] = useState(false);
 
   useEffect(() => {
-    dispatch(
-      mapActions.setStations({
-        stations: [],
-        direction: "forward",
-        isRoute: false,
-      })
-    );
+    dispatch(mapActions.clearDirection());
   }, []);
 
   const sidebarControlHandleClick = () => {

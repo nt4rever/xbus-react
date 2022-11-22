@@ -31,6 +31,11 @@ export const mapSlice = createSlice({
       state.isRoute = action.payload?.isRoute;
       return state;
     },
+    clearDirection: (state) => {
+      state.stations = [];
+      state.direction = "forward";
+      state.isRoute = false;
+    },
   },
 });
 
