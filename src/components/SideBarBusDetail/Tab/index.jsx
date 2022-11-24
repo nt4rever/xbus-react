@@ -4,6 +4,7 @@ import { useState } from "react";
 import { BusDetailContext } from "../../../contexts/busDetailContext";
 import styles from "./styles.module.scss";
 import TabInformation from "./TabInformation";
+import TabQRCode from "./TabQRCode";
 import TabRating from "./TabRating";
 import TabStation from "./TabStation";
 
@@ -22,6 +23,11 @@ const tabItems = [
     key: 2,
     title: "Đánh giá",
     content: <TabRating />,
+  },
+  {
+    key: 3,
+    title: "Mã QR",
+    content: <TabQRCode />,
   },
 ];
 
