@@ -19,6 +19,7 @@ export const getListRating = async (key) => {
 
 export const createRating = async (routeKey, rating) => {
   await set(ref(db, `Ratings/${routeKey}/${makeKey(12)}`), {
+    username: rating.username,
     name: rating.name,
     rating: rating.rating,
     text: rating.text,

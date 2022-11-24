@@ -16,9 +16,9 @@ const SideBarBusDetail = () => {
   const dispatch = useDispatch();
   const { setRouteKey, setData } = useContext(BusDetailContext);
   const params = useParams();
-  const routeKey = params.key;
-  setRouteKey(routeKey);
   const [isCollapse, setIsCollapse] = useState(false);
+
+  const routeKey = params.key;
 
   const { data, isLoading } = useQuery({
     queryKey: ["bus-detail", routeKey],
@@ -28,10 +28,16 @@ const SideBarBusDetail = () => {
   const { data: stations } = useQuery({
     queryKey: ["get-list-station", routeKey],
     queryFn: () => getListStation(routeKey),
-    onSuccess: () => {
-      setData(data);
-    },
   });
+
+  useEffect(() => {
+    setRouteKey(routeKey);
+    setData(data);
+  }, []);
+
+  useEffect(() => {
+    setData(data);
+  }, [data]);
 
   useEffect(() => {
     if (stations?.length > 0)

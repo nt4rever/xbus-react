@@ -1,0 +1,24 @@
+.qr__panel {
+  &__title {
+    text-align: center;
+    h3 {
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 16px;
+    }
+  }
+
+  &__image {
+    text-align: center;
+
+    img {
+      border: 1px dashed #ddd;
+    }
+  }
+
+  &__app {
+    margin-top: 30px;
+  }
+}
