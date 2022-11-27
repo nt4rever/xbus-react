@@ -45,7 +45,7 @@ const Header = () => {
       <div className={styles["header__auth"]}>
         {isLogged ? (
           <div className={styles["header__auth__user"]}>
-            <div className={styles["logout"]}>
+            <div className={styles["submenu"]}>
               {React.createElement(adminNav)}
               <div onClick={handleLogoutClick} className={styles["item"]}>
                 Logout

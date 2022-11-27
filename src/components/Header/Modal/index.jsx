@@ -12,6 +12,7 @@ const LoginModal = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
+
   const openNotification = (message) => {
     api.info({
       message: `Notification`,
@@ -19,42 +20,42 @@ const LoginModal = () => {
       placement: "top",
     });
   };
+
   const handleOk = () => {
-    form
-      .validateFields(["email", "password"])
-      .then(() => {
-        const { email, password } = form.getFieldsValue(["email", "password"]);
-        setIsLoading(true);
-        loginService({ email, password })
-          .then((res) => {
-            if (res.status === 200) {
-              setIsLoading(false);
-              const { access_token, user } = res.data;
-              localStorage.setItem("access_token", access_token);
-              form.resetFields();
-              dispatch(
-                authActions.login({
-                  isLogged: true,
-                  user,
-                })
-              );
-              dispatch(
-                modalActions.setModalLogin({
-                  modalLogin: false,
-                })
-              );
-            }
-          })
-          .catch((err) => {
-            setIsLoading(false);
-            const data = err.response.data;
-            openNotification(data.message);
-          });
+    form.submit();
+  };
+
+  const onFinish = async (values) => {
+    setIsLoading(true);
+    loginService(values)
+      .then((res) => {
+        if (res.status === 200) {
+          const { access_token, user } = res.data;
+          dispatch(
+            authActions.login({
+              isLogged: true,
+              user,
+              access_token,
+            })
+          );
+          dispatch(
+            modalActions.setModalLogin({
+              modalLogin: false,
+            })
+          );
+          form.resetFields();
+        }
+        setIsLoading(false);
       })
-      .catch(() => {});
+      .catch((err) => {
+        setIsLoading(false);
+        const data = err.response.data;
+        openNotification(data.message);
+      });
   };
 
   const handleCancel = () => {
+    form.resetFields();
     dispatch(
       modalActions.setModalLogin({
         modalLogin: false,
@@ -67,12 +68,18 @@ const LoginModal = () => {
       title="Đăng nhập"
       open={modalLogin}
       onOk={handleOk}
+      okText="Login"
       onCancel={handleCancel}
       confirmLoading={isLoading}
     >
       {contextHolder}
 
-      <Form name="normal_login" className="login-form" form={form}>
+      <Form
+        name="normal_login"
+        className="login-form"
+        onFinish={onFinish}
+        form={form}
+      >
         <Form.Item
           name="email"
           rules={[

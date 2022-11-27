@@ -79,7 +79,7 @@ const RouteTable = () => {
       rowKey="id"
       scroll={{
         x: "1000px",
-        y: "calc(100vh - 200px)",
+        y: "calc(100vh - 230px)",
       }}
     />
   );

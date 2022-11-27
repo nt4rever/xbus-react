@@ -1,23 +1,11 @@
-import {
-  Button,
-  Drawer,
-  Space,
-  Form,
-  Input,
-  Select,
-  notification,
-  Popconfirm,
-} from "antd";
-import { useEffect } from "react";
+import { Button, Drawer, Space, Form, Input, Select, notification } from "antd";
 import { useState } from "react";
 import { useContext } from "react";
 import { RouteAdminContext } from "../../../../contexts/routeAdminContext";
-import { updateRoute } from "./../../../../apis/route/updateRoute";
-import { deleteRoute } from "./../../../../apis/route/deleteRoute";
+import { createRoute } from "./../../../../apis/route/createRoute";
 
-const RouteDetail = () => {
-  const { isDetail, closeRouteDetail, record, refetchHandle } =
-    useContext(RouteAdminContext);
+const NewRoute = () => {
+  const { isNew, newHandle, refetchHandle } = useContext(RouteAdminContext);
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
   const [loading, setLoading] = useState(false);
@@ -30,23 +18,20 @@ const RouteDetail = () => {
     });
   };
 
-  useEffect(() => {
-    form.setFieldsValue(record);
-  }, [form, record]);
-
   const onSave = () => {
     form.submit();
   };
 
   const onClose = () => {
-    closeRouteDetail();
+    form.resetFields();
+    newHandle();
   };
 
   const onFinish = async (values) => {
     try {
       setLoading(true);
-      await updateRoute(record?.id, values);
-      openNotification("Save success!");
+      await createRoute(values);
+      openNotification("Create route success!");
       setLoading(false);
       refetchHandle();
     } catch (err) {
@@ -54,27 +39,15 @@ const RouteDetail = () => {
       openNotification("Error!");
     }
   };
-
-  const deleteConfirm = async () => {
-    try {
-      await deleteRoute(record?.id);
-      openNotification("Delete success!");
-      refetchHandle();
-      closeRouteDetail();
-    } catch (err) {
-      openNotification("Error!");
-    }
-  };
-
   return (
     <>
       {contextHolder}
       <Drawer
-        title={`Route detail`}
+        title={`New route`}
         placement="right"
         size="large"
         onClose={onClose}
-        open={isDetail}
+        open={isNew}
         extra={
           <Space>
             <Button onClick={onClose}>Cancel</Button>
@@ -212,19 +185,9 @@ const RouteDetail = () => {
             </Form.Item>
           </Form>
         </div>
-        <div style={{ textAlign: "center" }}>
-          <Popconfirm
-            title="Are you sure to delete this task?"
-            onConfirm={deleteConfirm}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button danger>Delete route</Button>
-          </Popconfirm>
-        </div>
       </Drawer>
     </>
   );
 };
 
-export default RouteDetail;
+export default NewRoute;

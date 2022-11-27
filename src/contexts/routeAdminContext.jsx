@@ -1,6 +1,7 @@
 import { createContext, useReducer } from "react";
 
 const initialState = {
+  isNew: false,
   isDetail: false,
   record: null,
   refetch: false,
@@ -25,7 +26,11 @@ const routeReducer = (state, action) => {
         ...state,
         refetch: !state.refetch,
       };
-
+    case "NEW":
+      return {
+        ...state,
+        isNew: !state.isNew,
+      };
     default:
       return state;
   }
@@ -55,15 +60,23 @@ export const RouteAdminProvider = ({ children }) => {
     });
   };
 
+  const newHandle = () => {
+    dispatch({
+      type: "NEW",
+    });
+  };
+
   return (
     <RouteAdminContext.Provider
       value={{
         isDetail: state.isDetail,
         record: state.record,
         refetch: state.refetch,
+        isNew: state.isNew,
         openRouteDetail,
         closeRouteDetail,
         refetchHandle,
+        newHandle,
       }}
     >
       {children}
