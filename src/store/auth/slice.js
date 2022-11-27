@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { axiosService } from "../../apis/axiosService";
 
 export const authSlice = createSlice({
   name: "auth",
@@ -13,6 +14,8 @@ export const authSlice = createSlice({
       return state;
     },
     logout: (state) => {
+      localStorage.removeItem("access_token");
+      delete axiosService.defaults.headers.common.Authorization;
       state.isLogged = false;
       state.user = undefined;
     },

@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { getListBusRoute } from "../../apis";
 import { removeAccents } from "../../utils/string";
 import ItemBusRoute from "./ItemBusRoute";
 import useDebounce from "../../hooks/useDebounce";
 import styles from "./styles.module.scss";
+import { getListRoute } from "../../apis/route/getListRoute";
 
 const BusRoute = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -12,7 +12,7 @@ const BusRoute = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["getRoutes"],
-    queryFn: getListBusRoute,
+    queryFn: getListRoute,
   });
 
   const listBusRoute = useMemo(() => {
@@ -26,7 +26,7 @@ const BusRoute = () => {
           )
           .sort((a, b) => (a.routeCode < b.routeCode ? -1 : 1))
           .map((item) => (
-            <ItemBusRoute key={item.key} busRoute={item} />
+            <ItemBusRoute key={item.id} busRoute={item} />
           ))}
       </>
     );

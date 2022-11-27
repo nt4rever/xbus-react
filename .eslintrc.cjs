@@ -19,6 +19,7 @@ module.exports = {
     "no-console": "warn",
     "react/prop-types": "off",
     "react/self-closing-comp": "off",
+    "no-unused-vars": "warn",
   },
   settings: {
     react: {
