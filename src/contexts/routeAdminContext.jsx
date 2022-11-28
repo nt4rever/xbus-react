@@ -5,6 +5,7 @@ const initialState = {
   isDetail: false,
   record: null,
   refetch: false,
+  isStation: false,
 };
 
 const routeReducer = (state, action) => {
@@ -30,6 +31,18 @@ const routeReducer = (state, action) => {
       return {
         ...state,
         isNew: !state.isNew,
+      };
+    case "OPEN_STATION":
+      return {
+        ...state,
+        isStation: true,
+        record: action.payload.record,
+      };
+    case "CLOSE_STATION":
+      return {
+        ...state,
+        isStation: false,
+        record: null,
       };
     default:
       return state;
@@ -66,6 +79,21 @@ export const RouteAdminProvider = ({ children }) => {
     });
   };
 
+  const openStation = (record) => {
+    dispatch({
+      type: "OPEN_STATION",
+      payload: {
+        record,
+      },
+    });
+  };
+
+  const closeStation = () => {
+    dispatch({
+      type: "CLOSE_STATION",
+    });
+  };
+
   return (
     <RouteAdminContext.Provider
       value={{
@@ -73,10 +101,13 @@ export const RouteAdminProvider = ({ children }) => {
         record: state.record,
         refetch: state.refetch,
         isNew: state.isNew,
+        isStation: state.isStation,
         openRouteDetail,
         closeRouteDetail,
         refetchHandle,
         newHandle,
+        openStation,
+        closeStation,
       }}
     >
       {children}

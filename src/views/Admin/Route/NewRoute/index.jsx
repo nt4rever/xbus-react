@@ -118,7 +118,7 @@ const NewRoute = () => {
               <Input.TextArea showCount />
             </Form.Item>
             <Form.Item
-              label="betweenTwoBus"
+              label="Between two bus"
               name="betweenTwoBus"
               rules={[
                 {
@@ -130,7 +130,7 @@ const NewRoute = () => {
               <Input />
             </Form.Item>
             <Form.Item
-              label="numberOfTrips"
+              label="Number of trips"
               name="numberOfTrips"
               rules={[
                 {
@@ -142,7 +142,7 @@ const NewRoute = () => {
               <Input />
             </Form.Item>
             <Form.Item
-              label="operatingTime"
+              label="Operating time"
               name="operatingTime"
               rules={[
                 {
@@ -154,7 +154,7 @@ const NewRoute = () => {
               <Input />
             </Form.Item>
             <Form.Item
-              label="routeLength"
+              label="Route length"
               name="routeLength"
               rules={[
                 {
@@ -166,7 +166,7 @@ const NewRoute = () => {
               <Input />
             </Form.Item>
             <Form.Item
-              label="ticketPrice"
+              label="Ticket price"
               name="ticketPrice"
               rules={[
                 {
@@ -177,7 +177,15 @@ const NewRoute = () => {
             >
               <Input />
             </Form.Item>
-            <Form.Item label="Status" name="status">
+            <Form.Item
+              label="Status"
+              name="status"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
               <Select>
                 <Select.Option value="active">Active</Select.Option>
                 <Select.Option value="hide">Hide</Select.Option>

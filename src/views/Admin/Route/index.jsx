@@ -4,6 +4,7 @@ import Loader from "../../../components/Loader";
 import { Button } from "antd";
 import { RouteAdminContext } from "../../../contexts/routeAdminContext";
 import NewRoute from "./NewRoute";
+import RouteStation from "./Station";
 const RouteDetail = lazy(() => import("./Detail"));
 const RouteTable = lazy(() => import("./Table"));
 
@@ -23,6 +24,7 @@ const RouteMange = () => {
         <RouteTable />
         <RouteDetail />
         <NewRoute />
+        <RouteStation />
       </Suspense>
     </div>
   );

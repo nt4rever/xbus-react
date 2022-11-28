@@ -11,7 +11,8 @@ import { getListRoute } from "../../../../apis/route/getListRoute";
 import { RouteAdminContext } from "../../../../contexts/routeAdminContext";
 
 const RouteTable = () => {
-  const { openRouteDetail, refetch } = useContext(RouteAdminContext);
+  const { openRouteDetail, refetch, openStation } =
+    useContext(RouteAdminContext);
 
   const { data } = useQuery({
     queryKey: ["getRoutes", refetch],
@@ -20,6 +21,10 @@ const RouteTable = () => {
 
   const handleViewClick = (record) => {
     openRouteDetail(record);
+  };
+
+  const handleStationClick = (record) => {
+    openStation(record);
   };
   const columns = [
     {
@@ -44,7 +49,11 @@ const RouteTable = () => {
       key: "status",
       dataIndex: "status",
       render: (status) => {
-        return <Tag color={"volcano"}>{status}</Tag>;
+        return (
+          <Tag color={status === "active" ? "#73d13d" : "#595959"}>
+            {status}
+          </Tag>
+        );
       },
     },
     {
@@ -56,7 +65,11 @@ const RouteTable = () => {
             <Button type="dashed" size="small">
               <CommentOutlined />
             </Button>
-            <Button type="dashed" size="small">
+            <Button
+              type="dashed"
+              size="small"
+              onClick={() => handleStationClick(record)}
+            >
               <CarOutlined />
             </Button>
             <Button
