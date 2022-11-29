@@ -3,11 +3,10 @@ import jwtDecode from "jwt-decode";
 import { axiosService } from "../apis/axiosService";
 import { useDispatch } from "react-redux";
 import { authActions } from "../store/auth/slice";
-import { apiAuthEndPoint } from "../apis/constant";
+import { getUser } from "../apis/auth/user";
 export const JWTAuthContext = createContext({});
 
 const verifyToken = (token) => {
-  if (!token) return false;
   const decoded = jwtDecode(token);
   return decoded.exp > Date.now() / 1000;
 };
@@ -15,28 +14,32 @@ const verifyToken = (token) => {
 export const JWTAuthProvider = ({ children }) => {
   const dispatch = useDispatch();
 
-  const getUser = async () => {
-    const res = await axiosService.post(apiAuthEndPoint.refresh);
-    if (res.status === 200) {
-      const { access_token, user } = res.data;
-      window.localStorage.setItem("access_token", access_token);
+  const fetchUser = async () => {
+    try {
+      const res = await getUser();
       dispatch(
         authActions.login({
           isLogged: true,
-          user,
+          user: res,
         })
       );
+    } catch (err) {
+      console.log(err);
     }
   };
+
   useEffect(() => {
     try {
       const access_token = localStorage.getItem("access_token");
-      if (verifyToken(access_token)) {
+      if (access_token && verifyToken(access_token)) {
         axiosService.defaults.headers.common.Authorization = `Bearer ${access_token}`;
-        getUser();
+        fetchUser();
+      } else {
+        localStorage.removeItem("access_token");
+        console.log("access_token_not_found_or_expired");
       }
     } catch (err) {
-      dispatch(authActions.logout());
+      console.log(err);
     }
   }, []);
   return (

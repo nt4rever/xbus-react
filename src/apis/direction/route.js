@@ -4,7 +4,7 @@ export const getRouteDirection = (stations, direction) => {
   return new Promise((resolve, reject) => {
     const coordinates = [];
     const stationsParam = stations.filter(
-      (item) => item.direction === direction && item.mapDirection === "true"
+      (item) => item.direction === direction && item.mapDirection === true
     );
     stationsParam.map((item) =>
       coordinates.push([Number(item.lng), Number(item.lat)])

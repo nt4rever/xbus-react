@@ -3,6 +3,7 @@ import { Form, Input, Modal, notification } from "antd";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginService } from "../../../apis/auth/login";
+import { axiosService } from "../../../apis/axiosService";
 import { authActions } from "../../../store/auth/slice";
 import { modalActions } from "../../../store/modal/slice";
 
@@ -30,12 +31,14 @@ const LoginModal = () => {
     loginService(values)
       .then((res) => {
         if (res.status === 200) {
-          const { access_token, user } = res.data;
+          const { access_token, refresh_token, user } = res.data;
+          localStorage.setItem("access_token", access_token);
+          localStorage.setItem("refresh_token", refresh_token);
+          axiosService.defaults.headers.common.Authorization = `Bearer ${access_token}`;
           dispatch(
             authActions.login({
               isLogged: true,
               user,
-              access_token,
             })
           );
           dispatch(

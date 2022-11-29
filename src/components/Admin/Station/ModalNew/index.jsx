@@ -1,4 +1,4 @@
-import { Form, Input, Modal, notification, Select } from "antd";
+import { Button, Form, Input, Modal, notification, Select } from "antd";
 import { useState } from "react";
 import { createStation } from "../../../../apis/station/createStation";
 
@@ -7,18 +7,11 @@ const ModalNewStation = ({
   closeModal,
   routeId,
   setIsFetching,
+  openNotification,
 }) => {
   const [form] = Form.useForm();
-  const [api, contextHolder] = notification.useNotification();
-  const [loading, setLoading] = useState(false);
 
-  const openNotification = (message) => {
-    api.info({
-      message: `Notification`,
-      description: message,
-      placement: "top",
-    });
-  };
+  const [loading, setLoading] = useState(false);
 
   const handleOk = () => {
     form.submit();
@@ -27,6 +20,10 @@ const ModalNewStation = ({
   const handleCancel = () => {
     form.resetFields();
     closeModal(false);
+  };
+
+  const handleClear = () => {
+    form.resetFields();
   };
 
   const onFinish = async (values) => {
@@ -50,13 +47,21 @@ const ModalNewStation = ({
 
   return (
     <>
-      {contextHolder}
       <Modal
         title="New station"
         open={isModalOpen}
-        onOk={handleOk}
         onCancel={handleCancel}
-        confirmLoading={loading}
+        footer={[
+          <Button key="clear" type="dashed" danger onClick={handleClear}>
+            Clear
+          </Button>,
+          <Button key="close" onClick={handleCancel}>
+            Close
+          </Button>,
+          <Button key="ok" type="primary" loading={loading} onClick={handleOk}>
+            Save
+          </Button>,
+        ]}
       >
         <Form
           labelCol={{

@@ -23,7 +23,7 @@ const RouteStation = () => {
       <Drawer
         title={`Station: ${record?.routeCode}`}
         placement="right"
-        width={"70%"}
+        width={"80%"}
         open={isStation}
         onClose={onClose}
       >

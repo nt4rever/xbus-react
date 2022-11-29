@@ -8,18 +8,10 @@ const ModalEditStation = ({
   closeModal,
   record,
   setIsFetching,
+  openNotification,
 }) => {
   const [form] = Form.useForm();
-  const [api, contextHolder] = notification.useNotification();
   const [loading, setLoading] = useState(false);
-
-  const openNotification = (message) => {
-    api.info({
-      message: `Notification`,
-      description: message,
-      placement: "top",
-    });
-  };
 
   useEffect(() => {
     form.setFieldsValue(record);
@@ -55,7 +47,6 @@ const ModalEditStation = ({
 
   return (
     <>
-      {contextHolder}
       <Modal
         title="Edit station"
         open={isModalOpen}
