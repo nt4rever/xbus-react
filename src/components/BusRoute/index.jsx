@@ -20,8 +20,10 @@ const BusRoute = () => {
       <>
         {data
           ?.filter((obj) =>
-            Object.values(obj).some((val) =>
-              removeAccents(val).includes(removeAccents(searchValue))
+            Object.values(obj).some(
+              (val) =>
+                removeAccents(val).includes(removeAccents(searchValue)) &&
+                obj.status === "active"
             )
           )
           .sort((a, b) => (a.routeCode < b.routeCode ? -1 : 1))

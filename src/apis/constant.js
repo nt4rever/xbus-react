@@ -1,4 +1,6 @@
-export const apiDomain = "https://xbus-nest-production.up.railway.app/";
+// export const apiDomain = "https://xbus-nest-production.up.railway.app/";
+export const apiDomain = "https://xbus-nest-prod-xbus-x5knol.mo6.mogenius.io/";
+// export const apiDomain = "http://localhost:3000/";
 
 export const apiAuthEndPoint = {
   login: "auth/signin",
@@ -19,4 +21,12 @@ export const apiStationEndPoint = {
   updateStation: "station/update",
   createStation: "station/create",
   deleteStation: "station/delete/",
+};
+
+export const apiRatingEndPoint = {
+  ratingById: "rating/",
+  statisRatingById: "rating/statis/",
+  create: "rating/create",
+  delete: "rating/delete",
+  deleteByAdmin: "rating/delete/admin",
 };

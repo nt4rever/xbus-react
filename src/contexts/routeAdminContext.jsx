@@ -6,6 +6,7 @@ const initialState = {
   record: null,
   refetch: false,
   isStation: false,
+  isRating: false,
 };
 
 const routeReducer = (state, action) => {
@@ -42,6 +43,18 @@ const routeReducer = (state, action) => {
       return {
         ...state,
         isStation: false,
+        record: null,
+      };
+    case "OPEN_RATING":
+      return {
+        ...state,
+        isRating: true,
+        record: action.payload.record,
+      };
+    case "CLOSE_RATING":
+      return {
+        ...state,
+        isRating: false,
         record: null,
       };
     default:
@@ -94,6 +107,21 @@ export const RouteAdminProvider = ({ children }) => {
     });
   };
 
+  const openRating = (record) => {
+    dispatch({
+      type: "OPEN_RATING",
+      payload: {
+        record,
+      },
+    });
+  };
+
+  const closeRating = () => {
+    dispatch({
+      type: "CLOSE_RATING",
+    });
+  };
+
   return (
     <RouteAdminContext.Provider
       value={{
@@ -102,12 +130,15 @@ export const RouteAdminProvider = ({ children }) => {
         refetch: state.refetch,
         isNew: state.isNew,
         isStation: state.isStation,
+        isRating: state.isRating,
         openRouteDetail,
         closeRouteDetail,
         refetchHandle,
         newHandle,
         openStation,
         closeStation,
+        openRating,
+        closeRating,
       }}
     >
       {children}

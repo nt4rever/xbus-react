@@ -5,6 +5,7 @@ import { Button } from "antd";
 import { RouteAdminContext } from "../../../contexts/routeAdminContext";
 import NewRoute from "./NewRoute";
 import RouteStation from "./Station";
+import RouteRating from "./Rating";
 const RouteDetail = lazy(() => import("./Detail"));
 const RouteTable = lazy(() => import("./Table"));
 
@@ -25,6 +26,7 @@ const RouteMange = () => {
         <RouteDetail />
         <NewRoute />
         <RouteStation />
+        <RouteRating />
       </Suspense>
     </div>
   );

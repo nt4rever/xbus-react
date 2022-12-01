@@ -11,7 +11,7 @@ import { getListRoute } from "../../../../apis/route/getListRoute";
 import { RouteAdminContext } from "../../../../contexts/routeAdminContext";
 
 const RouteTable = () => {
-  const { openRouteDetail, refetch, openStation } =
+  const { openRouteDetail, refetch, openStation, openRating } =
     useContext(RouteAdminContext);
 
   const { data } = useQuery({
@@ -62,7 +62,11 @@ const RouteTable = () => {
       render: (record) => (
         <>
           <Space size="small">
-            <Button type="dashed" size="small">
+            <Button
+              type="dashed"
+              size="small"
+              onClick={() => openRating(record)}
+            >
               <CommentOutlined />
             </Button>
             <Button
