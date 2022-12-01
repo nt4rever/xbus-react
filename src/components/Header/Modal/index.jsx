@@ -1,41 +1,64 @@
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { Form, Input, message, Modal } from "antd";
+import { Form, Input, Modal, notification } from "antd";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser } from "../../../apis/user";
+import { loginService } from "../../../apis/auth/login";
+import { axiosService } from "../../../apis/axiosService";
 import { authActions } from "../../../store/auth/slice";
 import { modalActions } from "../../../store/modal/slice";
 
 const LoginModal = () => {
   const { modalLogin } = useSelector((state) => state.modal);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const [api, contextHolder] = notification.useNotification();
 
-  const handleOk = async () => {
-    const { username, password } = form.getFieldsValue([
-      "username",
-      "password",
-    ]);
+  const openNotification = (message) => {
+    api.info({
+      message: `Notification`,
+      description: message,
+      placement: "top",
+    });
+  };
 
-    const user = await getUser(username);
-    if (user) {
-      if (user.password === password) {
-        form.resetFields();
-        dispatch(
-          authActions.login({
-            isLogged: true,
-            user,
-          })
-        );
-        dispatch(
-          modalActions.setModalLogin({
-            modalLogin: false,
-          })
-        );
-      } else message.error("Tên người dùng hoặc mật khẩu không đúng!");
-    } else message.error("Tên người dùng không tồn tại!");
+  const handleOk = () => {
+    form.submit();
+  };
+
+  const onFinish = async (values) => {
+    setIsLoading(true);
+    loginService(values)
+      .then((res) => {
+        if (res.status === 200) {
+          const { access_token, refresh_token, user } = res.data;
+          localStorage.setItem("access_token", access_token);
+          localStorage.setItem("refresh_token", refresh_token);
+          axiosService.defaults.headers.common.Authorization = `Bearer ${access_token}`;
+          dispatch(
+            authActions.login({
+              isLogged: true,
+              user,
+            })
+          );
+          dispatch(
+            modalActions.setModalLogin({
+              modalLogin: false,
+            })
+          );
+          form.resetFields();
+        }
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        const data = err.response.data;
+        openNotification(data.message);
+      });
   };
 
   const handleCancel = () => {
+    form.resetFields();
     dispatch(
       modalActions.setModalLogin({
         modalLogin: false,
@@ -48,21 +71,31 @@ const LoginModal = () => {
       title="Đăng nhập"
       open={modalLogin}
       onOk={handleOk}
+      okText="Login"
       onCancel={handleCancel}
+      confirmLoading={isLoading}
     >
-      <Form name="normal_login" className="login-form" form={form}>
+      {contextHolder}
+
+      <Form
+        name="normal_login"
+        className="login-form"
+        onFinish={onFinish}
+        form={form}
+      >
         <Form.Item
-          name="username"
+          name="email"
           rules={[
             {
               required: true,
-              message: "Please input your Username!",
+              type: "email",
+              message: "Please input your email!",
             },
           ]}
         >
           <Input
             prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder="Username"
+            placeholder="Email"
           />
         </Form.Item>
         <Form.Item
@@ -71,6 +104,11 @@ const LoginModal = () => {
             {
               required: true,
               message: "Please input your Password!",
+            },
+            {
+              message: "Password length between 6 to 16 character!",
+              min: 6,
+              max: 16,
             },
           ]}
         >

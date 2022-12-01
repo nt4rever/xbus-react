@@ -49,21 +49,30 @@ header {
     font-weight: 700;
     cursor: pointer;
 
-    &:hover .logout {
+    &:hover .submenu {
       visibility: visible;
     }
 
-    & .logout {
+    & .submenu {
       position: absolute;
       top: 34px;
       left: 0px;
-      padding: 5px 30px;
+      width: 100%;
       background: #fff;
       color: $cl-green-dark;
       z-index: 1000;
       border-radius: 10px;
       visibility: hidden;
-      transition: 0.2;
+
+      .item {
+        margin: 5px 0;
+        padding-left: 20%;
+
+        &:hover {
+          background: $bg-green;
+          color: #fff;
+        }
+      }
     }
   }
 }

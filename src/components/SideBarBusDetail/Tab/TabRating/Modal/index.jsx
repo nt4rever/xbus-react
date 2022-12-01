@@ -4,12 +4,12 @@ import { modalActions } from "../../../../../store/modal/slice";
 import { Input } from "antd";
 import styles from "./index.module.scss";
 import { useState } from "react";
-import { createRating } from "../../../../../apis/rating";
+import { createRating } from "../../../../../apis/rating/createRating";
 const { TextArea } = Input;
 
 const NewRating = ({ routeKey }) => {
   const { modalRating } = useSelector((state) => state.modal);
-  const { user } = useSelector((state) => state.auth);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
   const [value, setValue] = useState({
@@ -21,12 +21,14 @@ const NewRating = ({ routeKey }) => {
     if (value.text === "")
       return message.error("Vui lòng viết đánh giá của bạn!");
     else {
-      await createRating(routeKey, {
+      setIsLoading(true);
+      await createRating({
         ...value,
-        name: `${user.firstName} ${user.lastName}`,
-        time: Date.now(),
-        username: user.username,
+        routeId: routeKey,
       });
+      setValue({ rating: 5, text: "" });
+      setIsLoading(false);
+      message.success("Thêm đánh giá thành công!");
       dispatch(
         modalActions.setModalRating({
           modalRating: false,
@@ -34,7 +36,9 @@ const NewRating = ({ routeKey }) => {
       );
     }
   };
+
   const handleCancel = () => {
+    setValue({ rating: 5, text: "" });
     dispatch(
       modalActions.setModalRating({
         modalRating: false,
@@ -48,28 +52,31 @@ const NewRating = ({ routeKey }) => {
       rating: v,
     });
   };
+
   const textOnChange = (e) => {
     setValue({
       ...value,
       text: e.target.value,
     });
   };
+
   return (
     <Modal
       title="Đánh giá tuyến xe buýt"
       open={modalRating}
       onOk={handleOk}
       onCancel={handleCancel}
+      confirmLoading={isLoading}
     >
       <div className={styles["modal__container"]}>
         <div className={styles["modal__rating"]}>
-          <Rate defaultValue={5} onChange={rateOnChange} />
+          <Rate value={value.rating} onChange={rateOnChange} />
         </div>
-
         <TextArea
           showCount
           maxLength={100}
           placeholder="Viết đánh giá của bạn..."
+          value={value.text}
           onChange={textOnChange}
         />
       </div>

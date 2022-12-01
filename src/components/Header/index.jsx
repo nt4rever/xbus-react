@@ -1,5 +1,6 @@
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { authActions } from "../../store/auth/slice";
 import { modalActions } from "../../store/modal/slice";
 import LoginModal from "./Modal";
@@ -8,6 +9,7 @@ import styles from "./styles.module.scss";
 const Header = () => {
   const { isLogged, user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleLoginClick = () => {
     dispatch(
       modalActions.setModalLogin({
@@ -19,6 +21,20 @@ const Header = () => {
   const handleLogoutClick = () => {
     dispatch(authActions.logout());
   };
+
+  const handleNavAdminClick = () => {
+    navigate("/admin");
+  };
+
+  const adminNav = () => {
+    if (user?.roles.some((x) => x === "admin"))
+      return (
+        <div className={styles["item"]} onClick={handleNavAdminClick}>
+          Admin
+        </div>
+      );
+  };
+
   return (
     <header>
       <div className={styles["header__logo"]}>
@@ -29,10 +45,13 @@ const Header = () => {
       <div className={styles["header__auth"]}>
         {isLogged ? (
           <div className={styles["header__auth__user"]}>
-            <div className={styles["logout"]} onClick={handleLogoutClick}>
-              Logout
+            <div className={styles["submenu"]}>
+              {React.createElement(adminNav)}
+              <div onClick={handleLogoutClick} className={styles["item"]}>
+                Logout
+              </div>
             </div>
-            <span>{user.username}</span>
+            <span>{`${user.firstName} ${user.lastName}`}</span>
           </div>
         ) : (
           <button onClick={handleLoginClick}>Đăng nhập</button>

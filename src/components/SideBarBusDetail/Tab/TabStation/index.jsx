@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Radio } from "antd";
 import styled from "styled-components";
 import { useContext, useState } from "react";
-import { getListStation } from "../../../../apis/station";
+import { getListStation } from "../../../../apis/station/getListStation";
 import styles from "./index.module.scss";
 import { useDispatch } from "react-redux";
 import { mapActions } from "../../../../store/map/slice";
@@ -77,6 +77,7 @@ const TabStation = () => {
           <>
             {data
               .filter((item) => item.direction === optionValue)
+              .sort((a, b) => a.order - b.order)
               .map((item, index) => (
                 <div
                   className={styles["station__item"]}

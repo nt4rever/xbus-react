@@ -1,7 +1,8 @@
 import styles from "./index.module.scss";
 import avatar from "../../../../../../assets/images/avatar.webp";
-import { convertTimeFirebase } from "../../../../../../utils/time";
-const Item = ({ data }) => {
+import { convertTime } from "../../../../../../utils/time";
+import { Button, Popconfirm } from "antd";
+const Item = ({ data, isOwn, handleDeleteRating }) => {
   const ratingStar = (
     <>
       {Array.from({ length: Math.ceil(data.rating) }).map((_, index) => (
@@ -26,12 +27,24 @@ const Item = ({ data }) => {
           </div>
           <div className={styles["rating-item__user--info"]}>
             <div className={styles["name"]}>{data.name}</div>
-            <div className={styles["time"]}>
-              {convertTimeFirebase(data.time)}
-            </div>
+            <div className={styles["time"]}>{convertTime(data.time)}</div>
           </div>
         </div>
-        <div className={styles["rating-item__user--rating"]}>{ratingStar}</div>
+        <div className={styles["rating-item__user--rating"]}>
+          {ratingStar}{" "}
+          {isOwn && (
+            <div className={styles["rating-item__action"]}>
+              <Popconfirm
+                title="Are you sure？"
+                okText="Yes"
+                cancelText="No"
+                onConfirm={() => handleDeleteRating(data.id)}
+              >
+                <Button size="small">Xoa</Button>
+              </Popconfirm>
+            </div>
+          )}
+        </div>
       </div>
       <div className={styles["rating-item__content"]}>
         <p>{data.text}</p>
