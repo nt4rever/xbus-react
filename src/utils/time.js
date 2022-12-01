@@ -1,5 +1,5 @@
 import format from "dayjs";
 
-export function convertTimeFirebase(time) {
-  return format(new Date(Number(time))).format("DD/MM/YYYY");
+export function convertTime(time) {
+  return format(new Date(time)).format("hh:mm DD/MM/YYYY");
 }

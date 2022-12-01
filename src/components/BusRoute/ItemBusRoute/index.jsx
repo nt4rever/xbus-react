@@ -12,7 +12,7 @@ const ItemBusRoute = ({ busRoute }) => {
   };
 
   return (
-    <div className={styles["route"]} onClick={() => handleClick(busRoute.key)}>
+    <div className={styles["route"]} onClick={() => handleClick(busRoute.id)}>
       <div className={styles["route__logo"]}>
         <img src={logo} alt="logo" />
       </div>

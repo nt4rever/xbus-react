@@ -3,6 +3,7 @@ import { createContext, useReducer } from "react";
 const initialState = {
   routeKey: null,
   data: null,
+  total: null,
   currentList: 5,
 };
 
@@ -18,11 +19,18 @@ const appReducer = (state, action) => {
         ...state,
         data: action.payload.data,
       };
-    case "INCREASE_CURRENT_LIST":
+    case "SET_TOTAL":
       return {
         ...state,
-        currentList: state.currentList + 5,
+        total: action.payload.total,
       };
+    case "INCREASE_CURRENT_LIST":
+      if (state.total && state.total > state.currentList)
+        return {
+          ...state,
+          currentList: state.currentList + 5,
+        };
+      else return state;
     default: {
       return state;
     }
@@ -55,6 +63,15 @@ export const BusDetailProvider = ({ children }) => {
     });
   };
 
+  const setTotal = (total) => {
+    dispatch({
+      type: "SET_TOTAL",
+      payload: {
+        total: total,
+      },
+    });
+  };
+
   return (
     <BusDetailContext.Provider
       value={{
@@ -64,6 +81,8 @@ export const BusDetailProvider = ({ children }) => {
         setData,
         currentList: state.currentList,
         setCurrentList,
+        total: state.total,
+        setTotal,
       }}
     >
       {children}

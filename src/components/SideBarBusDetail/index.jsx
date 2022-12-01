@@ -1,15 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getBusRouteDetail } from "../../apis/bus-detail";
 import styles from "./styles.module.scss";
 import "antd/dist/antd.less";
 import Tab from "./Tab";
-import { getListStation } from "../../apis/station";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { mapActions } from "../../store/map/slice";
 import { BusDetailContext } from "../../contexts/busDetailContext";
+import { getRouteById } from "../../apis/route/getRouteById";
+import { getListStation } from "../../apis/station/getListStation";
 
 const SideBarBusDetail = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const SideBarBusDetail = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["bus-detail", routeKey],
-    queryFn: () => getBusRouteDetail(routeKey),
+    queryFn: () => getRouteById(routeKey),
   });
 
   const { data: stations } = useQuery({
