@@ -1,7 +1,7 @@
 import { axiosService } from "../axiosService";
 import { apiRouteEndPoint } from "../constant";
 
-export const updateRoute = async (id, values) => {
+export const updateRoute = async ({ id, values }) => {
   const res = await axiosService.post(apiRouteEndPoint.update + id, {
     ...values,
   });

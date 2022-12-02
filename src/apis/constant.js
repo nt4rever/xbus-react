@@ -19,6 +19,7 @@ export const apiRouteEndPoint = {
 export const apiStationEndPoint = {
   getStations: "station",
   updateStation: "station/update",
+  updateStations: "station/updates",
   createStation: "station/create",
   deleteStation: "station/delete/",
 };

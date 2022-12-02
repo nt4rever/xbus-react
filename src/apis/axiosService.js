@@ -3,5 +3,5 @@ import { apiDomain } from "./constant";
 
 export const axiosService = axios.create({
   baseURL: apiDomain,
-  timeout: 10000,
+  timeout: 50000,
 });
