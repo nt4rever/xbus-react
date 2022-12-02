@@ -1,3 +1,4 @@
+import { notification } from "antd";
 import { createContext, useReducer } from "react";
 
 const initialState = {
@@ -65,6 +66,16 @@ export const RouteAdminContext = createContext(initialState);
 
 export const RouteAdminProvider = ({ children }) => {
   const [state, dispatch] = useReducer(routeReducer, initialState);
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotification = (message) => {
+    api.info({
+      message: `Notification`,
+      description: message,
+      placement: "top",
+    });
+  };
+
   const openRouteDetail = (record) => {
     dispatch({
       type: "OPEN_ROUTE_DETAIL",
@@ -139,9 +150,13 @@ export const RouteAdminProvider = ({ children }) => {
         closeStation,
         openRating,
         closeRating,
+        openNotification,
       }}
     >
-      {children}
+      <>
+        {contextHolder}
+        {children}
+      </>
     </RouteAdminContext.Provider>
   );
 };

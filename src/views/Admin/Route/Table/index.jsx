@@ -11,21 +11,14 @@ import { getListRoute } from "../../../../apis/route/getListRoute";
 import { RouteAdminContext } from "../../../../contexts/routeAdminContext";
 
 const RouteTable = () => {
-  const { openRouteDetail, refetch, openStation, openRating } =
+  const { openRouteDetail, openStation, openRating } =
     useContext(RouteAdminContext);
 
   const { data } = useQuery({
-    queryKey: ["getRoutes", refetch],
+    queryKey: ["getRoutes"],
     queryFn: getListRoute,
   });
 
-  const handleViewClick = (record) => {
-    openRouteDetail(record);
-  };
-
-  const handleStationClick = (record) => {
-    openStation(record);
-  };
   const columns = [
     {
       title: "Route code",
@@ -72,14 +65,14 @@ const RouteTable = () => {
             <Button
               type="dashed"
               size="small"
-              onClick={() => handleStationClick(record)}
+              onClick={() => openStation(record)}
             >
               <CarOutlined />
             </Button>
             <Button
               type="dashed"
               size="small"
-              onClick={() => handleViewClick(record)}
+              onClick={() => openRouteDetail(record)}
             >
               <FullscreenOutlined />
             </Button>
