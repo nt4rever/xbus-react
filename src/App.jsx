@@ -16,6 +16,7 @@ import Dashboard from "./views/Admin/Dashboard";
 import AuthGuard from "./components/Admin/AuthGuard";
 import { JWTAuthProvider } from "./contexts/jwtAuthContext";
 import { RouteAdminProvider } from "./contexts/routeAdminContext";
+import PageNotFound from "./views/Static/404";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,8 @@ const App = () => {
                 />
                 <Route path="user" element={<UserMange />} />
               </Route>
+              <Route path="/404" element={<PageNotFound />} />
+              <Route path="/*" element={<PageNotFound />} />
             </Routes>
           </BrowserRouter>
         </JWTAuthProvider>

@@ -3,8 +3,22 @@ import { Dropdown, Layout, Space } from "antd";
 import { Link } from "react-router-dom";
 import styles from "./index.module.scss";
 import logoImg from "./../../../assets/images/avatar.webp";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutAuth } from "../../../apis/auth/logout";
+import { authActions } from "../../../store/auth/slice";
 
 const Header = () => {
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const handleLogoutClick = async () => {
+    try {
+      await logoutAuth();
+      dispatch(authActions.logout());
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const items = [
     {
       key: "1",
@@ -14,7 +28,7 @@ const Header = () => {
     {
       key: "2",
       danger: true,
-      label: <Link to={"/admin/logout"}>Log out</Link>,
+      label: <div onClick={handleLogoutClick}>Log out</div>,
       icon: <LoginOutlined />,
     },
   ];
@@ -36,7 +50,7 @@ const Header = () => {
             <span className={styles["header-user"]}>
               <Space>
                 <UserOutlined />
-                Tan
+                {user?.lastName}
               </Space>
             </span>
           </Dropdown>

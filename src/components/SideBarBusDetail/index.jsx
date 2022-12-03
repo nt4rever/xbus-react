@@ -23,6 +23,9 @@ const SideBarBusDetail = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["bus-detail", routeKey],
     queryFn: () => getRouteById(routeKey),
+    onError: () => {
+      navigate("/404");
+    },
   });
 
   const { data: stations } = useQuery({
