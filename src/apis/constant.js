@@ -6,6 +6,7 @@ export const apiAuthEndPoint = {
   login: "auth/signin",
   refresh: "auth/refresh",
   getMe: "user",
+  logout: "auth/logout",
 };
 
 export const apiRouteEndPoint = {
