@@ -2,11 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { Radio } from "antd";
 import styled from "styled-components";
 import { useContext, useState } from "react";
-import { getListStation } from "../../../../apis/station/getListStation";
 import styles from "./index.module.scss";
 import { useDispatch } from "react-redux";
 import { mapActions } from "../../../../store/map/slice";
 import { BusDetailContext } from "../../../../contexts/busDetailContext";
+import { stationService } from "../../../../apis/station";
 
 const TabStation = () => {
   const { routeKey } = useContext(BusDetailContext);
@@ -27,7 +27,7 @@ const TabStation = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["get-list-station", routeKey],
-    queryFn: () => getListStation(routeKey),
+    queryFn: () => stationService.getList(routeKey),
   });
 
   const optionOnChange = ({ target: { value } }) => {

@@ -1,30 +1,93 @@
-import { useQuery } from "@tanstack/react-query";
-import { Button, notification, Popconfirm, Space, Table, Tag } from "antd";
-import { useState } from "react";
-import { deleteStation } from "../../../../apis/station/deleteStation";
-import { getListStation } from "../../../../apis/station/getListStation";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Button, Popconfirm, Space, Switch, Table, Tag } from "antd";
+import { useContext, useState, useCallback, useRef, useMemo } from "react";
 import ModalEditStation from "../ModalEdit";
 import ModalNewStation from "../ModalNew";
+import update from "immutability-helper";
+import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { RouteAdminContext } from "../../../../contexts/routeAdminContext";
+import { stationService } from "../../../../apis/station";
+
+const type = "DraggableBodyRow";
+
+const DraggableBodyRow = ({
+  index,
+  moveRow,
+  className,
+  style,
+  ...restProps
+}) => {
+  const ref = useRef(null);
+  const [{ isOver, dropClassName }, drop] = useDrop({
+    accept: type,
+    collect: (monitor) => {
+      const { index: dragIndex } = monitor.getItem() || {};
+      if (dragIndex === index) {
+        return {};
+      }
+      return {
+        isOver: monitor.isOver(),
+        dropClassName:
+          dragIndex < index ? " drop-over-downward" : " drop-over-upward",
+      };
+    },
+    drop: (item) => {
+      moveRow(item.index, index);
+    },
+  });
+  const [, drag] = useDrag({
+    type,
+    item: {
+      index,
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+  drop(drag(ref));
+  return (
+    <tr
+      ref={ref}
+      className={`${className}${isOver ? dropClassName : ""}`}
+      style={{
+        cursor: "move",
+        ...style,
+      }}
+      {...restProps}
+    />
+  );
+};
 
 const TableStation = ({ id }) => {
+  const queryClient = useQueryClient();
+  const { openNotification } = useContext(RouteAdminContext);
   const [currentRecord, setCurrentRecord] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [isNew, setIsNew] = useState(false);
-  const [fetching, setIsFetching] = useState(false);
-  const [api, contextHolder] = notification.useNotification();
+  const [direction, setDirection] = useState(true);
+  const [dragData, setDragData] = useState([]);
 
   const { data } = useQuery({
-    queryKey: ["getListStation", id, fetching],
-    queryFn: () => getListStation(id),
+    queryKey: ["getListStation", id],
+    queryFn: () => stationService.getList(id),
+    refetchOnWindowFocus: false,
   });
 
-  const openNotification = (message) => {
-    api.info({
-      message: `Notification`,
-      description: message,
-      placement: "top",
-    });
-  };
+  const dataTable = useMemo(() => {
+    if (dragData.length > 0) {
+      return dragData;
+    }
+    if (data) {
+      const currentDirection = direction ? "forward" : "back";
+      return data.filter((x) => x.direction === currentDirection);
+    }
+    return [];
+  }, [data, direction, dragData]);
+
+  const deleteMutation = useMutation(stationService.destroy, {
+    onSuccess: () => queryClient.invalidateQueries(["getListStation"]),
+  });
 
   const handleEdit = (record) => {
     setIsEdit((x) => !x);
@@ -36,14 +99,30 @@ const TableStation = ({ id }) => {
   };
 
   const handleDelete = async (record) => {
-    try {
-      await deleteStation(record.id);
-      openNotification("Delete station success!");
-      setIsFetching((x) => !x);
-    } catch (err) {
-      openNotification("Error!");
-      console.log(err);
-    }
+    await deleteMutation.mutateAsync(record.id, {
+      onSuccess: () => openNotification("Delete station success!"),
+      onError: (err) => {
+        openNotification("Error!");
+        console.log(err);
+      },
+    });
+  };
+
+  const updateMutation = useMutation(stationService.updateList, {
+    onSuccess: () => queryClient.invalidateQueries(["getListStation"]),
+  });
+
+  const handleSaveOrder = async () => {
+    if (dragData.length > 0)
+      await updateMutation.mutateAsync(dragData, {
+        onSuccess: () => {
+          openNotification("Save success!");
+        },
+        onError: (err) => {
+          openNotification("Error!");
+          console.log(err);
+        },
+      });
   };
 
   const columns = [
@@ -73,17 +152,6 @@ const TableStation = ({ id }) => {
       title: "Direction",
       dataIndex: "direction",
       key: "direction",
-      filters: [
-        {
-          text: "forward",
-          value: "forward",
-        },
-        {
-          text: "back",
-          value: "back",
-        },
-      ],
-      onFilter: (value, record) => record.direction.indexOf(value) === 0,
     },
     {
       title: "Map direction",
@@ -124,31 +192,82 @@ const TableStation = ({ id }) => {
       ),
     },
   ];
+
+  const components = {
+    body: {
+      row: DraggableBodyRow,
+    },
+  };
+
+  const moveRow = useCallback(
+    (dragIndex, hoverIndex) => {
+      const dragRow = dataTable[dragIndex];
+      const newData = update(dataTable, {
+        $splice: [
+          [dragIndex, 1],
+          [hoverIndex, 0, dragRow],
+        ],
+      });
+      const dataReset = newData.map((item, index) => {
+        item.order = index;
+        return item;
+      });
+      setDragData(dataReset);
+    },
+    [dataTable]
+  );
+
   return (
     <>
-      {contextHolder}
-      <Button
-        type="primary"
-        style={{ marginBottom: "10px" }}
-        onClick={() => handleNew()}
+      <Space
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: "10px",
+        }}
       >
-        New station
-      </Button>
-      <Table columns={columns} dataSource={data} rowKey="id" />;
+        <Space>
+          <Button type="primary" onClick={() => handleNew()}>
+            New station
+          </Button>
+          <Popconfirm
+            title="Are you sure to save this current order?"
+            onConfirm={handleSaveOrder}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="primary">Save</Button>
+          </Popconfirm>
+        </Space>
+        <Switch
+          checkedChildren="Lượt đi"
+          unCheckedChildren="Lượt về"
+          checked={direction}
+          onChange={() => setDirection((x) => !x)}
+        />
+      </Space>
+      <DndProvider backend={HTML5Backend}>
+        <Table
+          columns={columns}
+          dataSource={dataTable}
+          rowKey="id"
+          components={components}
+          onRow={(_, index) => {
+            const attr = {
+              index,
+              moveRow,
+            };
+            return attr;
+          }}
+        />
+      </DndProvider>
       <ModalEditStation
         isModalOpen={isEdit}
         record={currentRecord}
         closeModal={setIsEdit}
-        setIsFetching={setIsFetching}
-        openNotification={openNotification}
       />
-      <ModalNewStation
-        isModalOpen={isNew}
-        closeModal={setIsNew}
-        routeId={id}
-        setIsFetching={setIsFetching}
-        openNotification={openNotification}
-      />
+      <ModalNewStation isModalOpen={isNew} closeModal={setIsNew} routeId={id} />
     </>
   );
 };

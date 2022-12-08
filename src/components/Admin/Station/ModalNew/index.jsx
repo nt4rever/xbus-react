@@ -1,18 +1,19 @@
-import { Button, Form, Input, Modal, notification, Select } from "antd";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button, Form, Input, Modal, Select } from "antd";
+import { useContext } from "react";
 import { useState } from "react";
-import { createStation } from "../../../../apis/station/createStation";
+import { stationService } from "../../../../apis/station";
+import { RouteAdminContext } from "../../../../contexts/routeAdminContext";
 
-const ModalNewStation = ({
-  isModalOpen,
-  closeModal,
-  routeId,
-  setIsFetching,
-  openNotification,
-}) => {
+const ModalNewStation = ({ isModalOpen, closeModal, routeId }) => {
+  const queryClient = useQueryClient();
+  const { openNotification } = useContext(RouteAdminContext);
   const [form] = Form.useForm();
-
   const [loading, setLoading] = useState(false);
 
+  const addMutation = useMutation(stationService.create, {
+    onSuccess: () => queryClient.invalidateQueries(["getListStation"]),
+  });
   const handleOk = () => {
     form.submit();
   };
@@ -27,22 +28,27 @@ const ModalNewStation = ({
   };
 
   const onFinish = async (values) => {
-    try {
-      setLoading(true);
-      await createStation({
+    setLoading(true);
+    await addMutation.mutateAsync(
+      {
         ...values,
         lat: Number(values.lat),
         lng: Number(values.lng),
         order: Number(values.order),
         routeId,
-      });
-      openNotification("Create new station success!");
-      setLoading(false);
-      setIsFetching((x) => !x);
-    } catch (err) {
-      setLoading(false);
-      openNotification("Error!");
-    }
+      },
+      {
+        onSuccess: () => {
+          openNotification("Create new station success!");
+          setLoading(false);
+        },
+        onError: (err) => {
+          console.log(err);
+          setLoading(false);
+          openNotification("Error!");
+        },
+      }
+    );
   };
 
   return (

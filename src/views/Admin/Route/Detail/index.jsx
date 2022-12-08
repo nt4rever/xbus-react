@@ -1,34 +1,25 @@
-import {
-  Button,
-  Drawer,
-  Space,
-  Form,
-  Input,
-  Select,
-  notification,
-  Popconfirm,
-} from "antd";
+import { Button, Drawer, Space, Form, Input, Select, Popconfirm } from "antd";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useContext } from "react";
 import { RouteAdminContext } from "../../../../contexts/routeAdminContext";
-import { updateRoute } from "./../../../../apis/route/updateRoute";
-import { deleteRoute } from "./../../../../apis/route/deleteRoute";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { routeService } from "../../../../apis/route";
 
 const RouteDetail = () => {
-  const { isDetail, closeRouteDetail, record, refetchHandle } =
+  const queryClient = useQueryClient();
+  const { isDetail, closeRouteDetail, record, openNotification } =
     useContext(RouteAdminContext);
   const [form] = Form.useForm();
-  const [api, contextHolder] = notification.useNotification();
   const [loading, setLoading] = useState(false);
 
-  const openNotification = (message) => {
-    api.info({
-      message: `Notification`,
-      description: message,
-      placement: "top",
-    });
-  };
+  const editMutation = useMutation(routeService.update, {
+    onSuccess: () => queryClient.invalidateQueries(["getRoutes"]),
+  });
+
+  const deleteMutation = useMutation(routeService.destroy, {
+    onSuccess: () => queryClient.invalidateQueries(["getRoutes"]),
+  });
 
   useEffect(() => {
     form.setFieldsValue(record);
@@ -42,33 +33,41 @@ const RouteDetail = () => {
     closeRouteDetail();
   };
 
-  const onFinish = async (values) => {
-    try {
-      setLoading(true);
-      await updateRoute(record?.id, values);
-      openNotification("Save success!");
-      setLoading(false);
-      refetchHandle();
-    } catch (err) {
-      setLoading(false);
-      openNotification("Error!");
-    }
+  const onFinish = (values) => {
+    setLoading(true);
+    editMutation.mutate(
+      { id: record?.id, values },
+      {
+        onSuccess: () => {
+          openNotification("Save success!");
+          setLoading(false);
+        },
+        onError: (err) => {
+          console.log(err);
+          openNotification("Error!");
+          setLoading(false);
+        },
+      }
+    );
   };
 
   const deleteConfirm = async () => {
-    try {
-      await deleteRoute(record?.id);
-      openNotification("Delete success!");
-      refetchHandle();
-      closeRouteDetail();
-    } catch (err) {
-      openNotification("Error!");
-    }
+    setLoading(true);
+    deleteMutation.mutate(record?.id, {
+      onSuccess: () => {
+        openNotification("Delete success!");
+        closeRouteDetail();
+        setLoading(false);
+      },
+      onError: () => {
+        openNotification("Error!");
+        setLoading(false);
+      },
+    });
   };
 
   return (
     <>
-      {contextHolder}
       <Drawer
         title={`Route detail`}
         placement="right"

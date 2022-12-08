@@ -1,17 +1,19 @@
-import { Form, Input, Modal, notification, Select } from "antd";
-import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Form, Input, Modal, Select } from "antd";
+import { useContext, useState } from "react";
 import { useEffect } from "react";
-import { updateStation } from "../../../../apis/station/updateStation";
+import { stationService } from "../../../../apis/station";
+import { RouteAdminContext } from "../../../../contexts/routeAdminContext";
 
-const ModalEditStation = ({
-  isModalOpen,
-  closeModal,
-  record,
-  setIsFetching,
-  openNotification,
-}) => {
+const ModalEditStation = ({ isModalOpen, closeModal, record }) => {
+  const queryClient = useQueryClient();
+  const { openNotification } = useContext(RouteAdminContext);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+
+  const editMutation = useMutation(stationService.update, {
+    onSuccess: () => queryClient.invalidateQueries(["getListStation"]),
+  });
 
   useEffect(() => {
     form.setFieldsValue(record);
@@ -26,23 +28,28 @@ const ModalEditStation = ({
   };
 
   const onFinish = async (values) => {
-    try {
-      setLoading(true);
-      await updateStation({
+    setLoading(true);
+    await editMutation.mutateAsync(
+      {
         ...values,
         lat: Number(values.lat),
         lng: Number(values.lng),
         order: Number(values.order),
         id: record.id,
         routeId: record.routeId,
-      });
-      openNotification("Update station success!");
-      setLoading(false);
-      setIsFetching((x) => !x);
-    } catch (err) {
-      setLoading(false);
-      openNotification("Error!");
-    }
+      },
+      {
+        onSuccess: () => {
+          openNotification("Update station success!");
+          setLoading(false);
+        },
+        onError: (err) => {
+          console.log(err);
+          setLoading(false);
+          openNotification("Error!");
+        },
+      }
+    );
   };
 
   return (

@@ -1,46 +1,46 @@
 import { useQuery } from "@tanstack/react-query";
-import { useContext, useState } from "react";
+import { useContext, useState, useMemo, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import styles from "./styles.module.scss";
-import "antd/dist/antd.less";
-import Tab from "./Tab";
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
 import { mapActions } from "../../store/map/slice";
 import { BusDetailContext } from "../../contexts/busDetailContext";
-import { getRouteById } from "../../apis/route/getRouteById";
-import { getListStation } from "../../apis/station/getListStation";
+import { routeService } from "../../apis/route";
+import { stationService } from "../../apis/station";
+import Tab from "./Tab";
+import Loader from "../Loader";
+import styles from "./styles.module.scss";
 
 const SideBarBusDetail = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { setRouteKey, setData } = useContext(BusDetailContext);
   const params = useParams();
+  const { setRouteKey, setData } = useContext(BusDetailContext);
   const [isCollapse, setIsCollapse] = useState(false);
 
   const routeKey = params.key;
 
   const { data, isLoading } = useQuery({
     queryKey: ["bus-detail", routeKey],
-    queryFn: () => getRouteById(routeKey),
+    queryFn: () => routeService.getById(routeKey),
+    onSuccess: (data) => {
+      setData(data);
+    },
+    onError: () => {
+      navigate("/404");
+    },
   });
 
   const { data: stations } = useQuery({
     queryKey: ["get-list-station", routeKey],
-    queryFn: () => getListStation(routeKey),
+    queryFn: () => stationService.getList(routeKey),
   });
 
   useEffect(() => {
     setRouteKey(routeKey);
-    setData(data);
   }, []);
 
-  useEffect(() => {
-    setData(data);
-  }, [data]);
-
-  useEffect(() => {
-    if (stations?.length > 0)
+  useMemo(() => {
+    if (stations?.length > 0) {
       dispatch(
         mapActions.setStations({
           stations,
@@ -48,6 +48,7 @@ const SideBarBusDetail = () => {
           isRoute: true,
         })
       );
+    }
   }, [stations]);
 
   const sidebarControlHandleClick = () => {
@@ -81,7 +82,7 @@ const SideBarBusDetail = () => {
           <div className={styles["name"]}>{data?.routeCode}</div>
         </div>
         <div className={styles["bus-container"]}>
-          {isLoading ? "Loading..." : <Tab />}
+          {isLoading ? <Loader /> : <Tab />}
         </div>
       </div>
       <div

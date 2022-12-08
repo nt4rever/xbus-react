@@ -18,8 +18,12 @@ const Header = () => {
     );
   };
 
-  const handleLogoutClick = () => {
-    dispatch(authActions.logout());
+  const handleLogoutClick = async () => {
+    try {
+      dispatch(authActions.logout());
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleNavAdminClick = () => {

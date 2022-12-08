@@ -6,6 +6,7 @@ export const apiAuthEndPoint = {
   login: "auth/signin",
   refresh: "auth/refresh",
   getMe: "user",
+  logout: "auth/logout",
 };
 
 export const apiRouteEndPoint = {
@@ -19,6 +20,7 @@ export const apiRouteEndPoint = {
 export const apiStationEndPoint = {
   getStations: "station",
   updateStation: "station/update",
+  updateStations: "station/updates",
   createStation: "station/create",
   deleteStation: "station/delete/",
 };

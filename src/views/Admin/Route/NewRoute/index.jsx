@@ -1,22 +1,19 @@
-import { Button, Drawer, Space, Form, Input, Select, notification } from "antd";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button, Drawer, Space, Form, Input, Select } from "antd";
 import { useState } from "react";
 import { useContext } from "react";
+import { routeService } from "../../../../apis/route";
 import { RouteAdminContext } from "../../../../contexts/routeAdminContext";
-import { createRoute } from "./../../../../apis/route/createRoute";
 
 const NewRoute = () => {
-  const { isNew, newHandle, refetchHandle } = useContext(RouteAdminContext);
+  const queryClient = useQueryClient();
+  const { isNew, newHandle, openNotification } = useContext(RouteAdminContext);
   const [form] = Form.useForm();
-  const [api, contextHolder] = notification.useNotification();
   const [loading, setLoading] = useState(false);
 
-  const openNotification = (message) => {
-    api.info({
-      message: `Notification`,
-      description: message,
-      placement: "top",
-    });
-  };
+  const createMutation = useMutation(routeService.create, {
+    onSuccess: () => queryClient.invalidateQueries(["getRoutes"]),
+  });
 
   const onSave = () => {
     form.submit();
@@ -28,20 +25,21 @@ const NewRoute = () => {
   };
 
   const onFinish = async (values) => {
-    try {
-      setLoading(true);
-      await createRoute(values);
-      openNotification("Create route success!");
-      setLoading(false);
-      refetchHandle();
-    } catch (err) {
-      setLoading(false);
-      openNotification("Error!");
-    }
+    setLoading(true);
+    createMutation.mutate(values, {
+      onSuccess: () => {
+        openNotification("Create route success!");
+        setLoading(false);
+      },
+      onError: (err) => {
+        console.log(err);
+        setLoading(false);
+        openNotification("Error!");
+      },
+    });
   };
   return (
     <>
-      {contextHolder}
       <Drawer
         title={`New route`}
         placement="right"

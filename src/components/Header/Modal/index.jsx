@@ -2,8 +2,7 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { Form, Input, Modal, notification } from "antd";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginService } from "../../../apis/auth/login";
-import { axiosService } from "../../../apis/axiosService";
+import { authService } from "../../../apis/auth";
 import { authActions } from "../../../store/auth/slice";
 import { modalActions } from "../../../store/modal/slice";
 
@@ -27,34 +26,31 @@ const LoginModal = () => {
   };
 
   const onFinish = async (values) => {
-    setIsLoading(true);
-    loginService(values)
-      .then((res) => {
-        if (res.status === 200) {
-          const { access_token, refresh_token, user } = res.data;
-          localStorage.setItem("access_token", access_token);
-          localStorage.setItem("refresh_token", refresh_token);
-          axiosService.defaults.headers.common.Authorization = `Bearer ${access_token}`;
-          dispatch(
-            authActions.login({
-              isLogged: true,
-              user,
-            })
-          );
-          dispatch(
-            modalActions.setModalLogin({
-              modalLogin: false,
-            })
-          );
-          form.resetFields();
-        }
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        const data = err.response.data;
-        openNotification(data.message);
-      });
+    try {
+      setIsLoading(true);
+      const { access_token, refresh_token, user } = await authService.login(
+        values
+      );
+      setIsLoading(false);
+      dispatch(
+        authActions.login({
+          isLogged: true,
+          user,
+          accessToken: access_token,
+          refreshToken: refresh_token,
+        })
+      );
+      dispatch(
+        modalActions.setModalLogin({
+          modalLogin: false,
+        })
+      );
+      form.resetFields();
+    } catch (err) {
+      setIsLoading(false);
+      const data = err.response.data;
+      openNotification(data.message);
+    }
   };
 
   const handleCancel = () => {

@@ -7,25 +7,18 @@ import { useQuery } from "@tanstack/react-query";
 import { Button, Space, Table, Tag } from "antd";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { getListRoute } from "../../../../apis/route/getListRoute";
+import { routeService } from "../../../../apis/route";
 import { RouteAdminContext } from "../../../../contexts/routeAdminContext";
 
 const RouteTable = () => {
-  const { openRouteDetail, refetch, openStation, openRating } =
+  const { openRouteDetail, openStation, openRating } =
     useContext(RouteAdminContext);
 
   const { data } = useQuery({
-    queryKey: ["getRoutes", refetch],
-    queryFn: getListRoute,
+    queryKey: ["getRoutes"],
+    queryFn: routeService.getList,
   });
 
-  const handleViewClick = (record) => {
-    openRouteDetail(record);
-  };
-
-  const handleStationClick = (record) => {
-    openStation(record);
-  };
   const columns = [
     {
       title: "Route code",
@@ -72,14 +65,14 @@ const RouteTable = () => {
             <Button
               type="dashed"
               size="small"
-              onClick={() => handleStationClick(record)}
+              onClick={() => openStation(record)}
             >
               <CarOutlined />
             </Button>
             <Button
               type="dashed"
               size="small"
-              onClick={() => handleViewClick(record)}
+              onClick={() => openRouteDetail(record)}
             >
               <FullscreenOutlined />
             </Button>

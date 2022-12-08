@@ -1,9 +1,9 @@
 import { useState } from "react";
-import "antd/dist/antd.less";
+// import "antd/dist/reset.css";
 import styles from "./styles.module.scss";
 import { Tabs } from "antd";
 import { sideBarItems } from "./sideBarItems";
-import "./tab.scss";
+import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { mapActions } from "../../store/map/slice";
@@ -20,6 +20,18 @@ const SideBar = () => {
     setIsCollapse((x) => !x);
   };
 
+  const TabCustom = styled(Tabs)`
+    .ant-tabs-nav-list {
+      width: 100%;
+      flex-wrap: wrap;
+
+      & .ant-tabs-tab {
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  `;
   return (
     <div className={styles["sidebar"]}>
       <div
@@ -27,7 +39,7 @@ const SideBar = () => {
           isCollapse && styles["is-collapse"]
         }`}
       >
-        <Tabs
+        <TabCustom
           defaultActiveKey="1"
           centered
           size="middle"
