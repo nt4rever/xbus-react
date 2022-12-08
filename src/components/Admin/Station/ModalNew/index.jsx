@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Form, Input, Modal, Select } from "antd";
 import { useContext } from "react";
 import { useState } from "react";
-import { createStation } from "../../../../apis/station/createStation";
+import { stationService } from "../../../../apis/station";
 import { RouteAdminContext } from "../../../../contexts/routeAdminContext";
 
 const ModalNewStation = ({ isModalOpen, closeModal, routeId }) => {
@@ -11,7 +11,7 @@ const ModalNewStation = ({ isModalOpen, closeModal, routeId }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
-  const addMutation = useMutation(createStation, {
+  const addMutation = useMutation(stationService.create, {
     onSuccess: () => queryClient.invalidateQueries(["getListStation"]),
   });
   const handleOk = () => {

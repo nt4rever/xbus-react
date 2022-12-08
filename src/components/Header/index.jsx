@@ -1,7 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { logoutAuth } from "../../apis/auth/logout";
 import { authActions } from "../../store/auth/slice";
 import { modalActions } from "../../store/modal/slice";
 import LoginModal from "./Modal";
@@ -21,7 +20,6 @@ const Header = () => {
 
   const handleLogoutClick = async () => {
     try {
-      await logoutAuth();
       dispatch(authActions.logout());
     } catch (err) {
       console.log(err);

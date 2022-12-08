@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "antd/dist/antd.less";
+// import "antd/dist/reset.css";
 import styles from "./styles.module.scss";
 import { Tabs } from "antd";
 import { sideBarItems } from "./sideBarItems";

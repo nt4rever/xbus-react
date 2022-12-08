@@ -1,18 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Popconfirm, Space, Switch, Table, Tag } from "antd";
-import { useContext, useState } from "react";
-import { deleteStation } from "../../../../apis/station/deleteStation";
-import { getListStation } from "../../../../apis/station/getListStation";
+import { useContext, useState, useCallback, useRef, useMemo } from "react";
 import ModalEditStation from "../ModalEdit";
 import ModalNewStation from "../ModalNew";
 import update from "immutability-helper";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { useRef } from "react";
-import { useCallback } from "react";
 import { RouteAdminContext } from "../../../../contexts/routeAdminContext";
-import { useMemo } from "react";
-import { updateStations } from "../../../../apis/station/updateStations";
+import { stationService } from "../../../../apis/station";
+
 const type = "DraggableBodyRow";
 
 const DraggableBodyRow = ({
@@ -74,7 +70,7 @@ const TableStation = ({ id }) => {
 
   const { data } = useQuery({
     queryKey: ["getListStation", id],
-    queryFn: () => getListStation(id),
+    queryFn: () => stationService.getList(id),
     refetchOnWindowFocus: false,
   });
 
@@ -89,7 +85,7 @@ const TableStation = ({ id }) => {
     return [];
   }, [data, direction, dragData]);
 
-  const deleteMutation = useMutation(deleteStation, {
+  const deleteMutation = useMutation(stationService.destroy, {
     onSuccess: () => queryClient.invalidateQueries(["getListStation"]),
   });
 
@@ -112,9 +108,10 @@ const TableStation = ({ id }) => {
     });
   };
 
-  const updateMutation = useMutation(updateStations, {
+  const updateMutation = useMutation(stationService.updateList, {
     onSuccess: () => queryClient.invalidateQueries(["getListStation"]),
   });
+
   const handleSaveOrder = async () => {
     if (dragData.length > 0)
       await updateMutation.mutateAsync(dragData, {

@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { message } from "antd";
-import { deleteRating } from "../../../../../apis/rating/deleteRating";
+import { ratingService } from "../../../../../apis/rating";
 import Item from "./Item";
 
 const ListRating = ({ ratings, userId }) => {
   const queryClient = useQueryClient();
-  const deleteMutation = useMutation(deleteRating, {
+  const deleteMutation = useMutation(ratingService.deleteByUser, {
     onSuccess: () => {
       queryClient.invalidateQueries(["get-statis-rating"]);
       queryClient.invalidateQueries(["get-list-rating"]);

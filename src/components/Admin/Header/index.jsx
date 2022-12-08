@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import styles from "./index.module.scss";
 import logoImg from "./../../../assets/images/avatar.webp";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutAuth } from "../../../apis/auth/logout";
 import { authActions } from "../../../store/auth/slice";
 
 const Header = () => {
@@ -12,7 +11,6 @@ const Header = () => {
   const dispatch = useDispatch();
   const handleLogoutClick = async () => {
     try {
-      await logoutAuth();
       dispatch(authActions.logout());
     } catch (err) {
       console.log(err);

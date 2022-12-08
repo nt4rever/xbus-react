@@ -4,8 +4,8 @@ import { modalActions } from "../../../../../store/modal/slice";
 import { Input } from "antd";
 import styles from "./index.module.scss";
 import { useState } from "react";
-import { createRating } from "../../../../../apis/rating/createRating";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ratingService } from "../../../../../apis/rating";
 const { TextArea } = Input;
 
 const NewRating = ({ routeKey }) => {
@@ -18,7 +18,7 @@ const NewRating = ({ routeKey }) => {
     text: "",
   });
 
-  const createMutation = useMutation(createRating, {
+  const createMutation = useMutation(ratingService.create, {
     onSuccess: () => {
       queryClient.invalidateQueries(["get-statis-rating"]);
       queryClient.invalidateQueries(["get-list-rating"]);
@@ -98,6 +98,7 @@ const NewRating = ({ routeKey }) => {
           value={value.text}
           onChange={textOnChange}
         />
+        <br />
       </div>
     </Modal>
   );

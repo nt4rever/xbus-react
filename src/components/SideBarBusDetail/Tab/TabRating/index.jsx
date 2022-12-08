@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getRatingById } from "../../../../apis/rating/getRatingByRouteId";
-import { getStatisRatingById } from "../../../../apis/rating/getStatisByRouteId";
+import { ratingService } from "../../../../apis/rating";
 import { BusDetailContext } from "../../../../contexts/busDetailContext";
 import { modalActions } from "../../../../store/modal/slice";
 import styles from "./index.module.scss";
@@ -17,13 +16,13 @@ const TabRating = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["get-list-rating", routeKey, currentList],
-    queryFn: () => getRatingById(routeKey, currentList),
+    queryFn: () => ratingService.getById(routeKey, currentList),
     keepPreviousData: true,
   });
 
   const { data: statis, isLoading: statisLoading } = useQuery({
     queryKey: ["get-statis-rating", routeKey],
-    queryFn: () => getStatisRatingById(routeKey),
+    queryFn: () => ratingService.getStatisById(routeKey),
     onSuccess: (data) => {
       setTotal(data.total);
     },

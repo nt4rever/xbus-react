@@ -2,8 +2,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Drawer, Space, Form, Input, Select } from "antd";
 import { useState } from "react";
 import { useContext } from "react";
+import { routeService } from "../../../../apis/route";
 import { RouteAdminContext } from "../../../../contexts/routeAdminContext";
-import { createRoute } from "./../../../../apis/route/createRoute";
 
 const NewRoute = () => {
   const queryClient = useQueryClient();
@@ -11,7 +11,7 @@ const NewRoute = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
-  const createMutation = useMutation(createRoute, {
+  const createMutation = useMutation(routeService.create, {
     onSuccess: () => queryClient.invalidateQueries(["getRoutes"]),
   });
 
