@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button, Space, Table, Tag } from "antd";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { getListRoute } from "../../../../apis/route/getListRoute";
+import { routeService } from "../../../../apis/route";
 import { RouteAdminContext } from "../../../../contexts/routeAdminContext";
 
 const RouteTable = () => {
@@ -16,7 +16,7 @@ const RouteTable = () => {
 
   const { data } = useQuery({
     queryKey: ["getRoutes"],
-    queryFn: getListRoute,
+    queryFn: routeService.getList,
   });
 
   const columns = [

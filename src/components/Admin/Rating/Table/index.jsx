@@ -1,18 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { Button, message, Popconfirm, Space, Table } from "antd";
-import { deleteRatingByAdmin } from "../../../../apis/rating/deleteRating";
-import { getRatingById } from "../../../../apis/rating/getRatingByRouteId";
+import { ratingService } from "../../../../apis/rating";
 import { convertTime } from "../../../../utils/time";
 
 const TableRating = ({ id }) => {
   const { data } = useQuery({
     queryKey: ["getRating", id],
-    queryFn: () => getRatingById(id, 1000),
+    queryFn: () => ratingService.getById(id, 1000),
   });
 
   const handleDelete = async (record) => {
     try {
-      await deleteRatingByAdmin(record.id);
+      await ratingService.deleteByAdmin(record.id);
       message.success("Deleted!");
     } catch (err) {
       message.error("Error!");

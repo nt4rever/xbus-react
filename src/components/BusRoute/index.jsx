@@ -4,7 +4,7 @@ import { removeAccents } from "../../utils/string";
 import ItemBusRoute from "./ItemBusRoute";
 import useDebounce from "../../hooks/useDebounce";
 import styles from "./styles.module.scss";
-import { getListRoute } from "../../apis/route/getListRoute";
+import { routeService } from "../../apis/route";
 
 const BusRoute = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -12,7 +12,7 @@ const BusRoute = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["getRoutes"],
-    queryFn: getListRoute,
+    queryFn: routeService.getList,
   });
 
   const listBusRoute = useMemo(() => {

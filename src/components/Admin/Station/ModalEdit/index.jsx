@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Form, Input, Modal, Select } from "antd";
 import { useContext, useState } from "react";
 import { useEffect } from "react";
-import { updateStation } from "../../../../apis/station/updateStation";
+import { stationService } from "../../../../apis/station";
 import { RouteAdminContext } from "../../../../contexts/routeAdminContext";
 
 const ModalEditStation = ({ isModalOpen, closeModal, record }) => {
@@ -11,7 +11,7 @@ const ModalEditStation = ({ isModalOpen, closeModal, record }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
-  const editMutation = useMutation(updateStation, {
+  const editMutation = useMutation(stationService.update, {
     onSuccess: () => queryClient.invalidateQueries(["getListStation"]),
   });
 

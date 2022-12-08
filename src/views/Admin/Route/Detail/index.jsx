@@ -3,9 +3,8 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useContext } from "react";
 import { RouteAdminContext } from "../../../../contexts/routeAdminContext";
-import { updateRoute } from "./../../../../apis/route/updateRoute";
-import { deleteRoute } from "./../../../../apis/route/deleteRoute";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { routeService } from "../../../../apis/route";
 
 const RouteDetail = () => {
   const queryClient = useQueryClient();
@@ -14,11 +13,11 @@ const RouteDetail = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
-  const editMutation = useMutation(updateRoute, {
+  const editMutation = useMutation(routeService.update, {
     onSuccess: () => queryClient.invalidateQueries(["getRoutes"]),
   });
 
-  const deleteMutation = useMutation(deleteRoute, {
+  const deleteMutation = useMutation(routeService.destroy, {
     onSuccess: () => queryClient.invalidateQueries(["getRoutes"]),
   });
 
