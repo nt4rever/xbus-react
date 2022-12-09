@@ -32,3 +32,8 @@ export const apiRatingEndPoint = {
   delete: "rating/delete",
   deleteByAdmin: "rating/delete/admin",
 };
+
+export const apiUserEndPoint = {
+  getAll: "auth/users",
+  updateByAdmin: "auth/update",
+};
