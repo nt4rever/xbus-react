@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosOrsService from "../axiosOrsService";
 
 export const getRouteDirection = (stations, direction) => {
   return new Promise((resolve, reject) => {
@@ -10,12 +10,10 @@ export const getRouteDirection = (stations, direction) => {
       .sort((a, b) => a.order - b.order);
     stationsParam.map((item) => coordinates.push([item.lng, item.lat]));
     if (coordinates.length === 0) return resolve(null);
-    axios
+    axiosOrsService
       .post(
-        "https://api.openrouteservice.org/v2/directions/driving-car/geojson",
-        {
-          coordinates,
-        },
+        "/v2/directions/driving-car/geojson",
+        { coordinates },
         {
           headers: {
             Authorization: import.meta.env.VITE_ROUTE_KEY,

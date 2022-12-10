@@ -2,3 +2,43 @@
   width: 100%;
   height: calc(100vh - 55px);
 }
+
+.marker-pin {
+  background-color: #1da1f2;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+
+  &:before {
+    content: "";
+    position: absolute;
+    background-color: #1da1f2;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    animation: dot-pulse 1.5s infinite;
+    z-index: 1;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    background-color: transparent;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    z-index: 1;
+    border: 2px solid #fff;
+  }
+}
+
+@keyframes dot-pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.1;
+    transform: scale(1.8);
+  }
+}

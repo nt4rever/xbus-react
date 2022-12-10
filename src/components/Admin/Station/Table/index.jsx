@@ -8,6 +8,7 @@ import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { RouteAdminContext } from "../../../../contexts/routeAdminContext";
 import { stationService } from "../../../../apis/station";
+import useSearchTable from "../../../../hooks/useSearchTable";
 
 const type = "DraggableBodyRow";
 
@@ -67,6 +68,7 @@ const TableStation = ({ id }) => {
   const [isNew, setIsNew] = useState(false);
   const [direction, setDirection] = useState(true);
   const [dragData, setDragData] = useState([]);
+  const getColumnSearchProps = useSearchTable();
 
   const { data } = useQuery({
     queryKey: ["getListStation", id],
@@ -137,6 +139,7 @@ const TableStation = ({ id }) => {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      ...getColumnSearchProps("name"),
     },
     {
       title: "Lat",
@@ -209,7 +212,7 @@ const TableStation = ({ id }) => {
         ],
       });
       const dataReset = newData.map((item, index) => {
-        item.order = index;
+        item.order = index + 1;
         return item;
       });
       setDragData(dataReset);
@@ -259,6 +262,10 @@ const TableStation = ({ id }) => {
               moveRow,
             };
             return attr;
+          }}
+          pagination={{
+            pageSizeOptions: [10, 25, 50, 100],
+            showSizeChanger: true,
           }}
         />
       </DndProvider>
