@@ -7,6 +7,8 @@ import { useDispatch } from "react-redux";
 import { mapActions } from "../../../../store/map/slice";
 import { BusDetailContext } from "../../../../contexts/busDetailContext";
 import { stationService } from "../../../../apis/station";
+import { useMemo } from "react";
+import Loader from "../../../Loader";
 
 const TabStation = () => {
   const { routeKey } = useContext(BusDetailContext);
@@ -33,7 +35,6 @@ const TabStation = () => {
   const optionOnChange = ({ target: { value } }) => {
     setSelected(0);
     setOptionValue(value);
-    dispatch(mapActions.setDirection({ direction: value }));
   };
 
   const handleStationClick = (index, item) => {
@@ -59,6 +60,38 @@ const TabStation = () => {
     }
   `;
 
+  const listStationRender = useMemo(() => {
+    if (isLoading) return <Loader />;
+
+    const stations = data
+      .filter((item) => item.direction === optionValue)
+      .sort((a, b) => a.order - b.order);
+    const currentStation = [stations[selected].lat, stations[selected].lng];
+    dispatch(mapActions.setCurrentStation({ currentStation }));
+    dispatch(mapActions.setDirection({ direction: optionValue }));
+    return (
+      <>
+        {stations.map((item, index) => (
+          <div
+            className={styles["station__item"]}
+            key={index}
+            onClick={() => handleStationClick(index, item)}
+          >
+            <div
+              className={`${styles["outer-dot"]} ${
+                selected === index ? styles["selected"] : ""
+              }`}
+            >
+              <div className={styles["dot"]} />
+            </div>
+            <div className={styles["name"]}>{item.name}</div>
+          </div>
+        ))}
+        <div className={styles["dot-line"]} />
+      </>
+    );
+  }, [data, optionValue, selected]);
+
   return (
     <>
       <div className={styles["option-station"]}>
@@ -70,34 +103,7 @@ const TabStation = () => {
           buttonStyle="solid"
         />
       </div>
-      <div className={styles["station"]}>
-        {isLoading ? (
-          "Loading..."
-        ) : (
-          <>
-            {data
-              .filter((item) => item.direction === optionValue)
-              .sort((a, b) => a.order - b.order)
-              .map((item, index) => (
-                <div
-                  className={styles["station__item"]}
-                  key={index}
-                  onClick={() => handleStationClick(index, item)}
-                >
-                  <div
-                    className={`${styles["outer-dot"]} ${
-                      selected === index ? styles["selected"] : ""
-                    }`}
-                  >
-                    <div className={styles["dot"]} />
-                  </div>
-                  <div className={styles["name"]}>{item.name}</div>
-                </div>
-              ))}
-            <div className={styles["dot-line"]} />
-          </>
-        )}
-      </div>
+      <div className={styles["station"]}>{listStationRender}</div>
     </>
   );
 };

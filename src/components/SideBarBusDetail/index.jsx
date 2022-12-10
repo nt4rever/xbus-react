@@ -46,6 +46,7 @@ const SideBarBusDetail = () => {
           stations,
           currentStation: [stations[0].lat, stations[0].lng],
           isRoute: true,
+          direction: "forward",
         })
       );
     }

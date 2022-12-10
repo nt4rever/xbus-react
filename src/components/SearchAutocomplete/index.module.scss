@@ -1,0 +1,21 @@
+.searchItem {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+
+  .iconContainer {
+    width: 30px;
+    font-size: 20px;
+    color: $cl-green;
+  }
+
+  .inputContainer {
+    flex-grow: 1;
+  }
+
+  input {
+    border: none;
+    outline: none;
+    background-color: inherit;
+  }
+}

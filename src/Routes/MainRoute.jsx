@@ -37,7 +37,6 @@ const MainRoute = () => {
           />
           <Route path="user" element={<UserMange />} />
         </Route>
-        <Route path="/404" element={<PageNotFound />} />
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

@@ -11,15 +11,36 @@ import {
 import { useSelector } from "react-redux";
 import { getRouteDirection } from "../../apis/direction/route";
 import styles from "./styles.module.scss";
-import { iconMarkerBack, iconMarkerForward } from "./Icon";
+import { iconCurrentLocation, iconMarkerBack, iconMarkerForward } from "./Icon";
+import { AimOutlined } from "@ant-design/icons";
+import { useState } from "react";
 
-const RecenterAutomatically = ({ currentStation }) => {
+function CustomLocation({ currentStation }) {
+  const [position, setPosition] = useState(null);
   const map = useMap();
+
+  const locationHandleClick = () => {
+    map.locate().addEventListener("locationfound", (e) => {
+      setPosition(e.latlng);
+      map.setView(e.latlng);
+    });
+  };
+
   useEffect(() => {
-    map.setView(currentStation);
+    if (currentStation !== undefined) map.setView(currentStation);
   }, [currentStation]);
-  return null;
-};
+
+  return (
+    <>
+      {position === null ? null : (
+        <Marker icon={iconCurrentLocation} position={position}></Marker>
+      )}
+      <div className={styles.map__location} onClick={locationHandleClick}>
+        <AimOutlined />
+      </div>
+    </>
+  );
+}
 
 const Map = () => {
   const { stations, direction, currentStation, isRoute } = useSelector(
@@ -34,10 +55,6 @@ const Map = () => {
 
   const iconMarker =
     direction === "forward" ? iconMarkerForward : iconMarkerBack;
-
-  const renderToCurrentPosition = currentStation && (
-    <RecenterAutomatically currentStation={currentStation} />
-  );
 
   const listStationMarker = stations
     .filter((item) => item.direction === direction)
@@ -76,8 +93,8 @@ const Map = () => {
         />
 
         {listStationMarker}
-        {renderToCurrentPosition}
         {geoJson}
+        <CustomLocation currentStation={currentStation} />
       </MapContainer>
     </div>
   );

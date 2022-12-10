@@ -48,7 +48,7 @@ const SideBar = () => {
               label: (
                 <span>
                   {item.icon}
-                  {item.lable}
+                  {item.label}
                 </span>
               ),
               key: item.id,
