@@ -2,6 +2,7 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { Form, Input, Modal, notification } from "antd";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { authService } from "../../../apis/auth";
 import { authActions } from "../../../store/auth/slice";
 import { modalActions } from "../../../store/modal/slice";
@@ -115,6 +116,9 @@ const LoginModal = () => {
           />
         </Form.Item>
       </Form>
+      <div>
+        {`Don't have an account?`} <Link to={"/signup"}>Sign up</Link>
+      </div>
     </Modal>
   );
 };

@@ -4,6 +4,7 @@ export const apiDomain = "https://xbus-nest-prod-xbus-x5knol.mo6.mogenius.io/";
 
 export const apiAuthEndPoint = {
   login: "auth/signin",
+  signup: "auth/signup",
   refresh: "auth/refresh",
   getMe: "user",
   logout: "auth/logout",
