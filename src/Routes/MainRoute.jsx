@@ -3,12 +3,13 @@ import AuthGuard from "../components/Admin/AuthGuard";
 import { RouteAdminProvider } from "../contexts/routeAdminContext";
 import AdminLayout from "../layouts/AdminLayout";
 import MainLayout from "../layouts/MainLayout";
+import RegistrationPage from "../pages/Registration";
+import PageNotFound from "../pages/Static/404";
 import Dashboard from "../views/Admin/Dashboard";
 import RouteMange from "../views/Admin/Route";
 import UserMange from "../views/Admin/User";
 import BusDetail from "../views/BusDetail";
 import Main from "../views/Main";
-import PageNotFound from "../views/Static/404";
 
 const MainRoute = () => {
   return (
@@ -37,6 +38,7 @@ const MainRoute = () => {
           />
           <Route path="user" element={<UserMange />} />
         </Route>
+        <Route path="/signup" element={<RegistrationPage />} />
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

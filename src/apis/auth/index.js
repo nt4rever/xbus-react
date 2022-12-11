@@ -6,6 +6,11 @@ const login = async (data) => {
   return res.data;
 };
 
+const signup = async (data) => {
+  const res = await axiosService.post(apiAuthEndPoint.signup, { ...data });
+  return res.data;
+};
+
 const logout = async () => {
   const res = await axiosService.get(apiAuthEndPoint.logout);
   return res;
@@ -19,6 +24,7 @@ const getUser = async () => {
 
 export const authService = {
   login,
+  signup,
   logout,
   getUser,
 };
