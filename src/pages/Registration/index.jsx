@@ -1,3 +1,4 @@
+import { useGoogleLogin } from "@react-oauth/google";
 import { Button, ConfigProvider, DatePicker, Form, Input, message } from "antd";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -47,6 +48,30 @@ const RegistrationPage = () => {
       message.error(err?.response.data.message);
     }
   };
+
+  const login = useGoogleLogin({
+    onSuccess: async (credentialResponse) => {
+      try {
+        const token = credentialResponse.access_token;
+        setLoading(true);
+        const { user, access_token, refresh_token } =
+          await authService.googleAuth(token);
+        dispatch(
+          authActions.login({
+            isLogged: true,
+            user,
+            accessToken: access_token,
+            refreshToken: refresh_token,
+          })
+        );
+        setLoading(false);
+        message.success("Sign up successfully!");
+        navigate("/");
+      } catch (err) {
+        setLoading(false);
+      }
+    },
+  });
 
   return (
     <ConfigProvider
@@ -650,7 +675,7 @@ const RegistrationPage = () => {
             </h3>
           </div>
           <div className={styles.socialSignUp}>
-            <div className={styles.item}>
+            <div className={styles.item} onClick={() => login()}>
               <span>
                 <svg
                   width="22"
@@ -684,7 +709,7 @@ const RegistrationPage = () => {
                   </defs>
                 </svg>
               </span>
-              Login with Google
+              Sign up with Google
             </div>
           </div>
           <div className={styles.divider}>or</div>

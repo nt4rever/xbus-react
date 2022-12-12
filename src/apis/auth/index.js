@@ -22,9 +22,15 @@ const getUser = async () => {
   else return null;
 };
 
+const googleAuth = async (token) => {
+  const res = await axiosService.post(apiAuthEndPoint.googleAuth, { token });
+  return res.data;
+};
+
 export const authService = {
   login,
   signup,
   logout,
   getUser,
+  googleAuth,
 };
