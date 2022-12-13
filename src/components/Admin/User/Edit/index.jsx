@@ -202,6 +202,19 @@ const EditUser = ({ data, isOpen, closeHandle }) => {
             options={options}
           />
         </Form.Item>
+        <Form.Item
+          label="password"
+          name="password"
+          rules={[
+            {
+              min: 6,
+              max: 16,
+              message: "Password length is between 6 to 16 character",
+            },
+          ]}
+        >
+          <Input type="password" />
+        </Form.Item>
       </Form>
     </Drawer>
   );

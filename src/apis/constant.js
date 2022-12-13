@@ -1,7 +1,7 @@
 // production
-// export const apiDomain = "https://xbus-nest-production.up.railway.app/";
+export const apiDomain = "https://xbus-nest-production.up.railway.app/";
 // dev
-export const apiDomain = "https://xbus-nest-prod-xbus-x5knol.mo6.mogenius.io/";
+// export const apiDomain = "https://xbus-nest-prod-xbus-x5knol.mo6.mogenius.io/";
 // local
 // export const apiDomain = "http://localhost:3000/";
 

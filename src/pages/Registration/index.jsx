@@ -1,18 +1,16 @@
 import { useGoogleLogin } from "@react-oauth/google";
 import { Button, ConfigProvider, DatePicker, Form, Input, message } from "antd";
 import { useEffect } from "react";
-import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { authService } from "../../apis/auth";
-import { authActions } from "../../store/auth/slice";
+import useAuth from "../../hooks/useAuth";
 import { modalActions } from "../../store/modal/slice";
 import styles from "./index.module.scss";
 
 const RegistrationPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const { googleLogin, signup, isLoading } = useAuth();
 
   useEffect(() => {
     dispatch(
@@ -23,52 +21,38 @@ const RegistrationPage = () => {
   }, []);
 
   const onFinish = async (fieldsValue) => {
-    try {
-      setLoading(true);
-      const values = {
-        ...fieldsValue,
-        dateOfBirth: fieldsValue["dateOfBirth"].format("DD-MM-YYYY"),
-      };
-      const { user, access_token, refresh_token } = await authService.signup(
-        values
-      );
-      dispatch(
-        authActions.login({
-          isLogged: true,
-          user,
-          accessToken: access_token,
-          refreshToken: refresh_token,
-        })
-      );
-      setLoading(false);
-      message.success("Sign up successfully!");
-      navigate("/");
-    } catch (err) {
-      setLoading(false);
-      message.error(err?.response.data.message);
-    }
+    const values = {
+      ...fieldsValue,
+      dateOfBirth: fieldsValue["dateOfBirth"].format("DD-MM-YYYY"),
+    };
+    await signup({
+      values,
+      onSuccess: () => {
+        message.success("Sign up successfully!");
+        navigate("/");
+      },
+      onError: (err) => {
+        message.error(err?.response.data.message);
+      },
+    });
   };
 
   const login = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
       try {
         const token = credentialResponse.access_token;
-        setLoading(true);
-        const { user, access_token, refresh_token } =
-          await authService.googleAuth(token);
-        dispatch(
-          authActions.login({
-            isLogged: true,
-            user,
-            accessToken: access_token,
-            refreshToken: refresh_token,
-          })
-        );
-        setLoading(false);
-        message.success("Sign up successfully!");
-        navigate("/");
+        await googleLogin({
+          token,
+          onSuccess: () => {
+            message.success("Sign in successfully!");
+            navigate("/");
+          },
+          onError: () => {
+            message.error("Error!");
+          },
+        });
       } catch (err) {
-        setLoading(false);
+        message.error("Error!");
       }
     },
   });
@@ -825,7 +809,7 @@ const RegistrationPage = () => {
                     marginBottom: 0,
                   }}
                   htmlType="submit"
-                  loading={loading}
+                  loading={isLoading}
                 >
                   Sign up
                 </Button>
