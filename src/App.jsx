@@ -10,6 +10,7 @@ import store, { persistor } from "./store";
 import "./App.scss";
 import "antd/dist/reset.css";
 import "leaflet/dist/leaflet.css";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const queryClient = new QueryClient();
 
@@ -18,10 +19,17 @@ const App = () => {
     <Provider store={store}>
       <PersistGate loading={<LoadingFullPage />} persistor={persistor}>
         <ConfigProvider theme={theme}>
-          <QueryClientProvider client={queryClient}>
-            <MainRoute />
-            <ReactQueryDevtools position="bottom-right" initialIsOpen={false} />
-          </QueryClientProvider>
+          <GoogleOAuthProvider
+            clientId={import.meta.env.VITE_GOOGLE_AUTH_CLIENT_ID}
+          >
+            <QueryClientProvider client={queryClient}>
+              <MainRoute />
+              <ReactQueryDevtools
+                position="bottom-right"
+                initialIsOpen={false}
+              />
+            </QueryClientProvider>
+          </GoogleOAuthProvider>
         </ConfigProvider>
       </PersistGate>
     </Provider>

@@ -62,7 +62,7 @@ const TabStation = () => {
 
   const listStationRender = useMemo(() => {
     if (isLoading) return <Loader />;
-
+    if (data === null || data?.length === 0) return null;
     const stations = data
       .filter((item) => item.direction === optionValue)
       .sort((a, b) => a.order - b.order);

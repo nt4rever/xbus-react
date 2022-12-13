@@ -70,7 +70,7 @@ const Navigate = () => {
       </div>
       <div className={styles.buttonContainer}>
         <Button type="primary" loading={loading} onClick={onNavigate}>
-          Navigate
+          Tìm đường
         </Button>
       </div>
     </div>
