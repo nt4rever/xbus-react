@@ -11,28 +11,38 @@ import TabStation from "./TabStation";
 const tabItems = [
   {
     key: 0,
+    name: "information",
     title: "Thông tin",
     content: <TabInformation />,
   },
   {
     key: 1,
+    name: "station",
     title: "Trạm dừng",
     content: <TabStation />,
   },
   {
     key: 2,
+    name: "rating",
     title: "Đánh giá",
     content: <TabRating />,
   },
   {
     key: 3,
+    name: "qr",
     title: "Mã QR",
     content: <TabQRCode />,
   },
 ];
 
 const Tab = () => {
-  const [tabView, setTabView] = useState(tabItems[0].content);
+  const [tabView, setTabView] = useState({
+    information: true,
+    station: false,
+    rating: false,
+    qr: false,
+  });
+
   const [tabActive, setTabActive] = useState(0);
   const { setCurrentList } = useContext(BusDetailContext);
   const mainRef = useRef(null);
@@ -48,7 +58,13 @@ const Tab = () => {
 
   const handleTabClick = (tab) => {
     setTabActive(tab.key);
-    setTabView(tab.content);
+    setTabView({
+      information: false,
+      station: false,
+      rating: false,
+      qr: false,
+      [tab.name]: true,
+    });
   };
 
   return (
@@ -68,8 +84,32 @@ const Tab = () => {
           </div>
         ))}
       </div>
-      <div className={styles["main"]} ref={mainRef} onScroll={handleScroll}>
-        {tabView}
+
+      <div
+        className={styles["main"]}
+        style={{ display: tabView.information ? "block" : "none" }}
+      >
+        <TabInformation />
+      </div>
+      <div
+        className={styles["main"]}
+        style={{ display: tabView.station ? "block" : "none" }}
+      >
+        <TabStation isVisible={tabView.station} />
+      </div>
+      <div
+        className={styles["main"]}
+        style={{ display: tabView.rating ? "block" : "none" }}
+        ref={mainRef}
+        onScroll={handleScroll}
+      >
+        <TabRating isVisible={tabView.rating} />
+      </div>
+      <div
+        className={styles["main"]}
+        style={{ display: tabView.qr ? "block" : "none" }}
+      >
+        <TabQRCode isVisible={tabView.qr} />
       </div>
     </div>
   );

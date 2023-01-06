@@ -8,7 +8,7 @@ const TabQRCode = () => {
     <div className={styles["qr__panel"]}>
       <div className={styles["qr__panel__title"]}>
         <h3>Mã QR tuyến xe: </h3>
-        <p>{data.routeName}</p>
+        <p>{data?.routeName}</p>
       </div>
       <div className={styles["qr__panel__image"]}>
         <img
