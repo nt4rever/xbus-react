@@ -51,8 +51,16 @@ const Header = () => {
           <div className={styles["header__auth__user"]}>
             <div className={styles["submenu"]}>
               {React.createElement(adminNav)}
+              <div
+                onClick={() => {
+                  navigate("/account-password");
+                }}
+                className={styles["item"]}
+              >
+                Mật khẩu
+              </div>
               <div onClick={handleLogoutClick} className={styles["item"]}>
-                Logout
+                Đăng xuất
               </div>
             </div>
             <span>{`${user.firstName} ${user.lastName}`}</span>

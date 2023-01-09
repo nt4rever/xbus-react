@@ -41,4 +41,5 @@ export const apiRatingEndPoint = {
 export const apiUserEndPoint = {
   getAll: "auth/users",
   updateByAdmin: "auth/update",
+  password: "user/password",
 };
