@@ -1,18 +1,33 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, message, Popconfirm, Space, Table } from "antd";
 import { ratingService } from "../../../../apis/rating";
 import { convertTime } from "../../../../utils/time";
 
 const TableRating = ({ id }) => {
+  const queryClient = useQueryClient();
+
   const { data } = useQuery({
     queryKey: ["getRating", id],
     queryFn: () => ratingService.getById(id, 1000),
   });
 
+  const deleteMutation = useMutation(ratingService.deleteByAdmin, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["getRating"]);
+    },
+  });
+
   const handleDelete = async (record) => {
     try {
-      await ratingService.deleteByAdmin(record.id);
-      message.success("Deleted!");
+      await deleteMutation.mutateAsync(record.id, {
+        onSuccess: () => {
+          message.success("Deleted!");
+        },
+        onError: () => {
+          message.error("Error!");
+        },
+      });
+      // await ratingService.deleteByAdmin(record.id);
     } catch (err) {
       message.error("Error!");
     }

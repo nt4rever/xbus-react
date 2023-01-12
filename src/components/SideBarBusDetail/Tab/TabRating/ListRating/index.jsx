@@ -15,6 +15,7 @@ const ListRating = ({ ratings, userId }) => {
     await deleteMutation.mutateAsync(id, {
       onSuccess: () => message.success("Delete rating success!"),
       onError: (err) => {
+        message.error("Error!");
         console.log(err);
       },
     });
