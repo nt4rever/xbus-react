@@ -21,7 +21,7 @@ import { AimOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { onValue, ref } from "firebase/database";
 import { db } from "../../apis/firebase";
-import { convertTime } from "../../utils/time";
+import { convertTimeShort } from "../../utils/time";
 
 function CustomLocation({ currentStation }) {
   const [position, setPosition] = useState(null);
@@ -84,7 +84,7 @@ const Map = () => {
         key={index}
       >
         <Tooltip direction="top" offset={[10, -30]} opacity={1} permanent>
-          {`${item.busCode} (${convertTime(Number(item.time))})`}
+          {`${item.busCode} (${convertTimeShort(Number(item.time))})`}
         </Tooltip>
       </Marker>
     ));

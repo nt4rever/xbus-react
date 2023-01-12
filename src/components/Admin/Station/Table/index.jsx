@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Popconfirm, Space, Switch, Table, Tag } from "antd";
+import { Button, message, Popconfirm, Space, Switch, Table, Tag } from "antd";
 import { useContext, useState, useCallback, useRef, useMemo } from "react";
 import ModalEditStation from "../ModalEdit";
 import ModalNewStation from "../ModalNew";
@@ -125,6 +125,7 @@ const TableStation = ({ id }) => {
           console.log(err);
         },
       });
+    else message.info("Please make some change!");
   };
 
   const columns = [
@@ -247,7 +248,10 @@ const TableStation = ({ id }) => {
           checkedChildren="Lượt đi"
           unCheckedChildren="Lượt về"
           checked={direction}
-          onChange={() => setDirection((x) => !x)}
+          onChange={() => {
+            setDragData([]);
+            setDirection((x) => !x);
+          }}
         />
       </Space>
       <DndProvider backend={HTML5Backend}>
