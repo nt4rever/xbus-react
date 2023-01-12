@@ -11,9 +11,17 @@ import {
 import { useSelector } from "react-redux";
 import { getRouteDirection } from "../../apis/direction/route";
 import styles from "./styles.module.scss";
-import { iconCurrentLocation, iconMarkerBack, iconMarkerForward } from "./Icon";
+import {
+  iconBus,
+  iconCurrentLocation,
+  iconMarkerBack,
+  iconMarkerForward,
+} from "./Icon";
 import { AimOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import { onValue, ref } from "firebase/database";
+import { db } from "../../apis/firebase";
+import { convertTime } from "../../utils/time";
 
 function CustomLocation({ currentStation }) {
   const [position, setPosition] = useState(null);
@@ -43,7 +51,8 @@ function CustomLocation({ currentStation }) {
 }
 
 const Map = () => {
-  const { stations, direction, currentStation, isRoute } = useSelector(
+  const [trackings, setTrackings] = useState([]);
+  const { stations, direction, currentStation, isRoute, routeId } = useSelector(
     (state) => state.map
   );
 
@@ -66,6 +75,20 @@ const Map = () => {
       </Marker>
     ));
 
+  const listTrackingMaker = trackings
+    .filter((item) => item.status === "true")
+    .map((item, index) => (
+      <Marker
+        icon={iconBus}
+        position={[Number(item.lat), Number(item.lng)]}
+        key={index}
+      >
+        <Tooltip direction="top" offset={[10, -30]} opacity={1} permanent>
+          {`${item.busCode} (${convertTime(Number(item.time))})`}
+        </Tooltip>
+      </Marker>
+    ));
+
   const colorGeo = direction === "forward" ? "#4fa095" : "#59C1BD";
 
   const geoJson =
@@ -80,6 +103,23 @@ const Map = () => {
       />
     ) : undefined;
 
+  useEffect(() => {
+    if (isRoute && routeId) {
+      const query = ref(db, `Tracking/${routeId}`);
+      const unsubscribe = onValue(query, (snapshot) => {
+        setTrackings([]);
+        if (snapshot.exists()) {
+          const data = Object.values(snapshot.val());
+          setTrackings(data);
+        }
+      });
+      return () => {
+        unsubscribe();
+        console.log("Unsubscribe firebase!");
+      };
+    }
+  }, [isRoute, routeId]);
+
   return (
     <div className={styles["map__container"]}>
       <MapContainer
@@ -93,6 +133,7 @@ const Map = () => {
         />
 
         {listStationMarker}
+        {listTrackingMaker}
         {geoJson}
         <CustomLocation currentStation={currentStation} />
       </MapContainer>

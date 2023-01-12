@@ -19,7 +19,10 @@ const TabQRCode = () => {
       <div className={styles["qr__panel__app"]}>
         <p>
           Sử dụng ứng dụng XBus để quét mã. Tải ứng dụng{" "}
-          <a href="http://xbus.herokuapp.com/xbus" target="__blank">
+          <a
+            href="https://xbus-nest-production.up.railway.app/page/xbus"
+            target="__blank"
+          >
             tại đây
           </a>
           .
