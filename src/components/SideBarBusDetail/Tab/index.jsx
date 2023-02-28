@@ -76,7 +76,7 @@ const Tab = () => {
             onClick={() => handleTabClick(item)}
             className={
               tabActive === item.key
-                ? `${styles["tab-item"]} ${styles["active"]}`
+                ? `${styles["tab-item"]} active`
                 : styles["tab-item"]
             }
           >
