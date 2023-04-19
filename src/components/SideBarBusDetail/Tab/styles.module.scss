@@ -24,7 +24,7 @@
         background-color: #fff;
       }
 
-      &.active {
+      &:global(.active) {
         color: #fff;
         background-color: $cl-green;
       }
